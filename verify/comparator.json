@@ -1,0 +1,33 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "Sealed.finConfig_def",
+    "Sealed.configSpace_def",
+    "Sealed.inner_localEmbed",
+    "Sealed.localEmbed_injective_and_norm",
+    "Sealed.localEmbed_extend",
+    "Sealed.commute_localEmbed_of_disjoint",
+    "Sealed.quasiLocalNet_eq_closure",
+    "Sealed.quasiLocalAlgebra_def",
+    "Sealed.commute_of_mem_quasiLocalNet",
+    "Sealed.quasiLocalNet_mono",
+    "Sealed.exists_unitary_covariance",
+    "Sealed.exists_starAlgEquiv_of_ref",
+    "Sealed.exists_unique_lift",
+    "Sealed.isometry_lift",
+    "Sealed.quasiLocalAlgebra_eq_top_of_finite",
+    "Sealed.quasiLocalNet_eq_range_of_finite",
+    "Sealed.witness_nontrivial_quasiLocalAlgebra",
+    "Sealed.witness_infinite_finConfig",
+    "Sealed.witness_quasiLocalNet_singleton_not_scalar",
+    "Sealed.witness_translation_covariant",
+    "Sealed.witness_references_differing_everywhere"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}

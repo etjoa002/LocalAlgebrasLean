@@ -1,0 +1,25 @@
+name = "LocalAlgebrasLean"
+version = "0.1.0"
+keywords = ["math", "operator-algebras", "local-algebras", "quantum-lattice-systems"]
+defaultTargets = ["LocalAlgebrasLean"]
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+# Pins: Lean v4.35.0-rc3 and Mathlib c55e6e7, the shared versions of the sibling libraries
+# (user, 5 Oct 2026). Mathlib is the only dependency, by design (user, 6 Oct 2026).
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0-rc3"
+
+[[lean_lib]]
+name = "LocalAlgebrasLean"
+
+[[lean_lib]]
+name = "Verify"
+srcDir = "verify"
+roots = ["Challenge", "Solution"]
