@@ -47,8 +47,7 @@ checks that each theorem proved in `Solution.lean` has exactly the statement giv
 `Quot.sound`, and that Lean's kernel and four independently written proof checkers all accept
 the proofs. To accept the results it is therefore enough to read the 21 statements; the proofs
 need not be read. On Linux the command compiles the code in a sandbox; on other systems the option
-`--inadvisably-no-sandbox` is needed, and the check is then weaker in that the compiled code is
-not isolated. The scripts `verify/check_same_statements.py` and `verify/make_core_page.py --check`
+`--inadvisably-no-sandbox` is needed, and the compiled code then runs without that isolation. The scripts `verify/check_same_statements.py` and `verify/make_core_page.py --check`
 confirm, in a few seconds, that the two Lean files state the same theorems and that the page is
 generated from the current `Challenge.lean`.
 
@@ -112,9 +111,9 @@ lake comparator --config verify/comparator.json --paranoid   # see "Verification
 finite-dimensional content of the construction on small windows of sites: the star-homomorphism
 properties of the local embedding, compatibility with `m ⊗ 1`, commutation for disjoint regions,
 covariance, and independence of the reference configuration, in exact integer arithmetic; operator
-norms and ranks are compared with a tolerance of `10⁻⁹`. It also illustrates, on finite windows,
-that the projection onto the reference state lies at distance `1/2` from every local algebra of a
-proper region; the infinite-volume statement is not tested.
+norms and ranks are compared with a tolerance of `10⁻⁹`. It also computes, on finite windows, the
+distance `1/2` from the projection onto the reference state to the local algebra of every proper
+region, which on the infinite lattice is a candidate for a later theorem (see Status).
 
 ## Conventions
 
@@ -124,12 +123,10 @@ configurations. See `CONVENTIONS.md` for the full list.
 
 ## Scope
 
-The library is kinematic: it constructs the algebras attached to regions and leaves dynamics to
-the libraries that use it. Any two reference configurations give isomorphic quasi-local nets,
+The library is kinematic: it constructs the algebras attached to regions, and dynamics belongs to
+the libraries built on it. Any two reference configurations give isomorphic quasi-local nets,
 through a relabelling of the letters at each site, and configurations that differ at finitely
-many sites give the same representation on `ℓ²`. Configurations that differ at infinitely many
-sites give inequivalent representations (J. von Neumann, "On infinite direct products",
-Compositio Math. 6 (1939) 1–77); that comparison is not part of the library.
+many sites give the same representation on `ℓ²`.
 
 ## Status
 
@@ -137,7 +134,10 @@ This is a living library: it is developed further, and this repository is update
 progresses. Problem reports and suggestions are welcome; see `CONTRIBUTING.md`. Next: nets of
 graded algebras, in which odd observables of disjoint regions anticommute instead of commuting,
 as fermionic lattice systems require; and lecture notes giving the readable account of the
-library.
+library. Candidates for later theorems: the representations on `ℓ²` for reference configurations
+that differ at infinitely many sites are inequivalent (J. von Neumann, "On infinite direct
+products", Compositio Math. 6 (1939) 1–77); and on the infinite lattice the projection onto the
+reference state lies at distance `1/2` from the local algebra of every proper region.
 
 ## Citation and licence
 
