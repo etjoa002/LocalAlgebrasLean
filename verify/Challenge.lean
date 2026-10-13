@@ -11,11 +11,10 @@ import LocalAlgebrasLean
 This file states, without proofs, the main theorems of LocalAlgebrasLean on the quasi-local
 algebra of a lattice of quantum systems with finite alphabets: the local embeddings of the matrix
 algebras of finite sets of sites into the bounded operators on the Hilbert space of the finitely
-supported configurations, the net of local algebras with locality and isotony, its covariance
-under symmetries of the sites, its independence of the reference configuration, the universal
-property of the quasi-local algebra, and the case of finitely many sites. A final section states
-concrete instances showing that the hypotheses can be met and that the objects are not
-degenerate.
+supported configurations, the net of local algebras with local commutativity and isotony, its
+covariance under symmetries of the sites, its independence of the reference configuration, the
+universal property of the quasi-local algebra, and the case of finitely many sites. A final
+section gives examples.
 
 The statements use five definitions of the library, and every other notion in them is Mathlib's.
 Each of the five is fixed in Mathlib's terms by a theorem below: `FinConfig` by `finConfig_def`,
@@ -65,9 +64,8 @@ theorem configSpace_def {Λ : Type*} {σ : Λ → Type*} (s₀ : (u : Λ) → σ
 /-! ## The local embeddings
 
 For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-homomorphism from the
-matrices on the letters of $X$ to the bounded operators on $H$. That it is one is part of its type
-in the sealed file, which the check holds fixed; statement 3 determines it by its matrix elements.
--/
+matrices on the letters of $X$; this is part of the type of $\iota_X$ in the Lean statements.
+Statement 3 determines $\iota_X$ by its matrix elements. -/
 
 open Classical in
 /-- For a finite set of sites $X$, a matrix $m$ on the letters of $X$ and finitely supported
@@ -102,7 +100,8 @@ theorem localEmbed_extend {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀
         m (fun x => ζ ⟨x, hXY x.2⟩) (fun x => ζ' ⟨x, hXY x.2⟩) else 0) =
       localEmbed s₀ X m := sorry
 
-/-- Locality: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute
+/-- Local commutativity: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and
+$\iota_Y(b)$ commute
 for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$. -/
 theorem commute_localEmbed_of_disjoint {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ]
     [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] (s₀ : (u : Λ) → σ u) {X Y : Set Λ}
@@ -131,7 +130,8 @@ theorem quasiLocalAlgebra_def {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] 
     [∀ u, DecidableEq (σ u)] (s₀ : (u : Λ) → σ u) :
     quasiLocalAlgebra s₀ = quasiLocalNet s₀ Set.univ := sorry
 
-/-- Locality: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$
+/-- Local commutativity: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal
+A(O_1)$
 commutes with every element of $\mathcal A(O_2)$. -/
 theorem commute_of_mem_quasiLocalNet {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ]
     [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] (s₀ : (u : Λ) → σ u) {O₁ O₂ : Set Λ}
@@ -239,26 +239,24 @@ theorem quasiLocalNet_eq_range_of_finite {Λ : Type*} {σ : Λ → Type*} [Decid
     (quasiLocalNet s₀ O : Set (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀)) =
       Set.range (localEmbed s₀ O) := sorry
 
-/-! ## Witnesses
+/-! ## Examples
 
-These concrete instances show that the hypotheses can be met and that the objects are not
-degenerate. -/
+These examples show that the hypotheses of the main theorems can be met and that the objects are
+not degenerate. -/
 
 /-- For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the
-quasi-local algebra is not the zero
-algebra. -/
+quasi-local algebra is not the zero algebra. -/
 theorem witness_nontrivial_quasiLocalAlgebra :
     Nontrivial (quasiLocalAlgebra (fun _ : ℕ => (0 : Fin 2))) := sorry
 
 /-- For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the
-set of finitely supported
-configurations, which indexes the basis of $H$, is infinite. -/
+set of finitely supported configurations, which indexes the basis of $H$, is infinite. -/
 theorem witness_infinite_finConfig :
     Infinite (FinConfig (fun _ : ℕ => (0 : Fin 2))) := sorry
 
 /-- For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the
-algebra $\mathcal A(\{0\})$ of the
-site $0$ contains an element that is not a multiple of the identity. -/
+algebra $\mathcal A(\{0\})$ of the site $0$ contains an element that is not a multiple of the
+identity. -/
 theorem witness_quasiLocalNet_singleton_not_scalar :
     ∃ a ∈ quasiLocalNet (fun _ : ℕ => (0 : Fin 2)) {0}, ∀ c : ℂ, a ≠ c • 1 := sorry
 

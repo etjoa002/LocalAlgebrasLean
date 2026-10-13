@@ -52,6 +52,22 @@ needed, and the compiled code then runs without that isolation. The scripts
 seconds, that the two Lean files state the same theorems and that the page is generated from the
 current `Challenge.lean`.
 
+`lake comparator` is the proof judge maintained by the Lean developers
+([leanprover/comparator](https://github.com/leanprover/comparator)), available as a command of
+Lean's build tool `lake` from Lean 4.35. It is meant for proofs whose author is not trusted. The
+Lean reference manual, in its chapter
+[Validating a Lean Proof](https://lean-lang.org/doc/reference/latest/ValidatingProofs/#validating-comparator),
+presents it as the strongest of its levels of checking, intended among other cases for proofs
+produced by AI. The judge takes the statements from a file fixed in advance (here
+`Challenge.lean`), exports the declarations of both files to a plain text format, and compares
+them there; it does not load the compiled library into its own process. With `--paranoid` it also
+runs four further proof checkers, written independently of Lean's kernel, among them lean4lean
+([digama0/lean4lean](https://github.com/digama0/lean4lean)), written in Lean, and nanoda
+([ammkrn/nanoda_lib](https://github.com/ammkrn/nanoda_lib)), written in Rust; a proof is accepted
+only if every checker accepts it. The judge takes as given what `Challenge.lean` imports: Lean's
+own library, Mathlib, and the five definitions of this library on which the statements depend,
+which is why the statements include descriptions of those five definitions in Mathlib's terms.
+
 ## The construction
 
 The quasi-local algebra is realized concretely on `ℓ²` of the finitely supported configurations,

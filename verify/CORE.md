@@ -14,7 +14,7 @@ There are sites $\Lambda$, a finite alphabet $\sigma_u$ at every site $u$, and a
 
 ## The local embeddings
 
-For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-homomorphism from the matrices on the letters of $X$ to the bounded operators on $H$. That it is one is part of its type in the sealed file, which the check holds fixed; statement 3 determines it by its matrix elements.
+For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-homomorphism from the matrices on the letters of $X$; this is part of the type of $\iota_X$ in the Lean statements. Statement 3 determines $\iota_X$ by its matrix elements.
 
 **3.** For a finite set of sites $X$, a matrix $m$ on the letters of $X$ and finitely supported configurations $s, t$, the matrix element $\langle e_s, \iota_X(m) e_t\rangle$ in the standard basis of $\ell^2(F)$ is $m(s|_X, t|_X)$ if $s$ and $t$ agree at every site outside $X$, and $0$ otherwise.  
 <sub>`Sealed.inner_localEmbed`</sub>
@@ -25,7 +25,7 @@ For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-hom
 **5.** Compatibility: for finite sets of sites $X \subseteq Y$ and a matrix $m$ on the letters of $X$, $\iota_Y(m \otimes 1) = \iota_X(m)$, where $(m \otimes 1)(\zeta, \zeta') = m(\zeta|_X, \zeta'|_X)$ if the letters $\zeta, \zeta'$ on $Y$ agree outside $X$, and $0$ otherwise.  
 <sub>`Sealed.localEmbed_extend`</sub>
 
-**6.** Locality: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$.  
+**6.** Local commutativity: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$.  
 <sub>`Sealed.commute_localEmbed_of_disjoint`</sub>
 
 ## The net of local algebras
@@ -38,7 +38,7 @@ Every set of sites $O$ has a $*$-subalgebra $\mathcal A(O)$ of the bounded opera
 **8.** The quasi-local algebra $\mathcal A_{ql}$ is the algebra $\mathcal A(\Lambda)$ of the set of all sites.  
 <sub>`Sealed.quasiLocalAlgebra_def`</sub>
 
-**9.** Locality: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$ commutes with every element of $\mathcal A(O_2)$.  
+**9.** Local commutativity: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$ commutes with every element of $\mathcal A(O_2)$.  
 <sub>`Sealed.commute_of_mem_quasiLocalNet`</sub>
 
 **10.** Isotony: for sets of sites $O_1 \subseteq O_2$, $\mathcal A(O_1) \subseteq \mathcal A(O_2)$.  
@@ -68,9 +68,9 @@ Every set of sites $O$ has a $*$-subalgebra $\mathcal A(O)$ of the bounded opera
 **16.** For a finite set of sites $O$, the algebra $\mathcal A(O)$ is the range of the local embedding $\iota_O$.  
 <sub>`Sealed.quasiLocalNet_eq_range_of_finite`</sub>
 
-## Witnesses
+## Examples
 
-These concrete instances show that the hypotheses can be met and that the objects are not degenerate.
+These examples show that the hypotheses of the main theorems can be met and that the objects are not degenerate.
 
 **17.** For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the quasi-local algebra is not the zero algebra.  
 <sub>`Sealed.witness_nontrivial_quasiLocalAlgebra`</sub>
@@ -89,4 +89,4 @@ These concrete instances show that the hypotheses can be met and that the object
 
 ---
 
-SHA-256 of `verify/Challenge.lean` (LF line endings): `ee17513b95fc4d92b9dab06e3b4039629ed72e781befd86c4e4f89ae10496ceb`
+SHA-256 of `verify/Challenge.lean` (LF line endings): `2866d29b91ce79ec230b3c61a2012f131b51ee0a8f19ccfec55d9d8fbc330908`

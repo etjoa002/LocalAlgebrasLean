@@ -16,7 +16,7 @@ There are sites $\Lambda$, a finite alphabet $\sigma_u$ at every site $u$, and a
 \paragraph{2.} The Hilbert space $H$ is $\ell^2(F)$, the square-summable complex functions on the set $F$ of finitely supported configurations.\\{\footnotesize\texttt{Sealed.configSpace\_def}}
 
 \section*{The local embeddings}
-For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-homomorphism from the matrices on the letters of $X$ to the bounded operators on $H$. That it is one is part of its type in the sealed file, which the check holds fixed; statement 3 determines it by its matrix elements.
+For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-homomorphism from the matrices on the letters of $X$; this is part of the type of $\iota_X$ in the Lean statements. Statement 3 determines $\iota_X$ by its matrix elements.
 
 \paragraph{3.} For a finite set of sites $X$, a matrix $m$ on the letters of $X$ and finitely supported configurations $s, t$, the matrix element $\langle e_s, \iota_X(m) e_t\rangle$ in the standard basis of $\ell^2(F)$ is $m(s|_X, t|_X)$ if $s$ and $t$ agree at every site outside $X$, and $0$ otherwise.\\{\footnotesize\texttt{Sealed.inner\_localEmbed}}
 
@@ -24,7 +24,7 @@ For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-hom
 
 \paragraph{5.} Compatibility: for finite sets of sites $X \subseteq Y$ and a matrix $m$ on the letters of $X$, $\iota_Y(m \otimes 1) = \iota_X(m)$, where $(m \otimes 1)(\zeta, \zeta') = m(\zeta|_X, \zeta'|_X)$ if the letters $\zeta, \zeta'$ on $Y$ agree outside $X$, and $0$ otherwise.\\{\footnotesize\texttt{Sealed.localEmbed\_extend}}
 
-\paragraph{6.} Locality: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$.\\{\footnotesize\texttt{Sealed.commute\_localEmbed\_of\_disjoint}}
+\paragraph{6.} Local commutativity: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$.\\{\footnotesize\texttt{Sealed.commute\_localEmbed\_of\_disjoint}}
 
 \section*{The net of local algebras}
 Every set of sites $O$ has a $*$-subalgebra $\mathcal A(O)$ of the bounded operators on $H$, closed in norm (statement 7), and the quasi-local algebra is $\mathcal A_{ql} = \mathcal A(\Lambda)$.
@@ -33,7 +33,7 @@ Every set of sites $O$ has a $*$-subalgebra $\mathcal A(O)$ of the bounded opera
 
 \paragraph{8.} The quasi-local algebra $\mathcal A_{ql}$ is the algebra $\mathcal A(\Lambda)$ of the set of all sites.\\{\footnotesize\texttt{Sealed.quasiLocalAlgebra\_def}}
 
-\paragraph{9.} Locality: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$ commutes with every element of $\mathcal A(O_2)$.\\{\footnotesize\texttt{Sealed.commute\_of\_mem\_quasiLocalNet}}
+\paragraph{9.} Local commutativity: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$ commutes with every element of $\mathcal A(O_2)$.\\{\footnotesize\texttt{Sealed.commute\_of\_mem\_quasiLocalNet}}
 
 \paragraph{10.} Isotony: for sets of sites $O_1 \subseteq O_2$, $\mathcal A(O_1) \subseteq \mathcal A(O_2)$.\\{\footnotesize\texttt{Sealed.quasiLocalNet\_mono}}
 
@@ -52,8 +52,8 @@ Every set of sites $O$ has a $*$-subalgebra $\mathcal A(O)$ of the bounded opera
 
 \paragraph{16.} For a finite set of sites $O$, the algebra $\mathcal A(O)$ is the range of the local embedding $\iota_O$.\\{\footnotesize\texttt{Sealed.quasiLocalNet\_eq\_range\_of\_finite}}
 
-\section*{Witnesses}
-These concrete instances show that the hypotheses can be met and that the objects are not degenerate.
+\section*{Examples}
+These examples show that the hypotheses of the main theorems can be met and that the objects are not degenerate.
 
 \paragraph{17.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the quasi-local algebra is not the zero algebra.\\{\footnotesize\texttt{Sealed.witness\_nontrivial\_quasiLocalAlgebra}}
 
@@ -65,5 +65,5 @@ These concrete instances show that the hypotheses can be met and that the object
 
 \paragraph{21.} For the chain $\mathbb N$ with two letters per site, the reference configurations $0$ and $1$ differ at infinitely many sites, and there is a $*$-isomorphism $\varphi$ of their quasi-local algebras with $a \in \mathcal A(O) \iff \varphi(a) \in \mathcal A'(O)$ for every set of sites $O$.\\{\footnotesize\texttt{Sealed.witness\_references\_differing\_everywhere}}
 
-\vfill{\footnotesize SHA-256 of \texttt{verify/Challenge.lean}: \texttt{ee17513b95fc4d92b9dab06e3b4039629ed72e781befd86c4e4f89ae10496ceb}}
+\vfill{\footnotesize SHA-256 of \texttt{verify/Challenge.lean}: \texttt{2866d29b91ce79ec230b3c61a2012f131b51ee0a8f19ccfec55d9d8fbc330908}}
 \end{document}
