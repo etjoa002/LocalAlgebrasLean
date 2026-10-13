@@ -17,9 +17,18 @@ permissions:
 jobs:
   judge:
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Add swap space (the independent checkers need more memory than the machine has)
+        run: |
+          sudo swapoff -a || true
+          sudo fallocate -l 24G /mnt/swapfile
+          sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile
+          sudo swapon /mnt/swapfile
+          free -h
 
       - name: Install Lean (elan)
         run: |
