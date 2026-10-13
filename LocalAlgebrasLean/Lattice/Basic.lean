@@ -19,10 +19,6 @@ rings, the lattices `ℤ^s`, general graphs and finite sets. A group acting on t
 regions by `O ↦ g • O`, as automorphisms of the region index; translations of a lattice are the
 case of an abelian group acting on itself.
 
-Moved from QCALean `Net/Automaton.lean` (milestone Q2, Definition 1, and the translations of
-regions), generalized from an abelian group of sites to any type and from translations to any
-group action; milestone L1.
-
 ## Main definitions
 
 * `LocalAlgebrasLean.subsetIndex V`: subsets of `V`, orthogonal = disjoint.
@@ -71,8 +67,8 @@ def actionAut (g : Γ) : (subsetIndex V).Aut where
     actionAut g O = (fun x => g⁻¹ • x) ⁻¹' O := rfl
 
 open scoped Pointwise in
-/-- The action on regions is the pointwise action on sets, `actionAut g O = g • O` (L1 fidelity
-review, finding 5; not `rfl`). -/
+/-- The action on regions is the pointwise action on sets, `actionAut g O = g • O`; the equality is
+not definitional. -/
 theorem actionAut_apply_eq_smul (g : Γ) (O : Set V) : actionAut g O = g • O := by
   ext x
   simp [Set.mem_smul_set_iff_inv_smul_mem]

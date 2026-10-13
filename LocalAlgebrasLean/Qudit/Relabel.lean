@@ -10,10 +10,8 @@ import LocalAlgebrasLean.Qudit.Config
 
 A bijection `e : Λ ≃ Λ'` of site sets with a uniform alphabet `α` induces the star-isomorphism
 `relabel e` of the qudit algebras, `(relabel e M) t t' = M (t ∘ e) (t' ∘ e)`, which carries the
-local algebra of `X` onto the local algebra of `e '' X` (M2, Proposition 4.4). This is the
-covariance pair a translation-invariant automaton on a finite site set needs (reuse by other
-formalizations, the user's instruction of 6 October 2026). Moved from LocalityLean (M2) in
-milestone L4 of this library.
+local algebra of `X` onto the local algebra of `e '' X`. This is the covariance pair needed for a
+translation-invariant automaton on a finite site set.
 
 ## Main definitions
 
@@ -64,8 +62,7 @@ section Uniform
 
 variable [Fintype Λ] [DecidableEq Λ] [Fintype Λ'] [DecidableEq Λ'] [Fintype α] [DecidableEq α]
 
-/-- M2, Proposition 4.4: the star-isomorphism of qudit algebras induced by a relabelling of the
-sites. -/
+/-- The star-isomorphism of qudit algebras induced by a relabelling of the sites. -/
 def relabel (e : Λ ≃ Λ') :
     QuditAlgebra (fun _ : Λ => α) ≃⋆ₐ[ℂ] QuditAlgebra (fun _ : Λ' => α) :=
   StarAlgEquiv.ofAlgEquiv (Matrix.reindexAlgEquiv ℂ ℂ (configCongr e)) fun M => by
@@ -111,7 +108,7 @@ theorem isLocal_relabel_iff (e : Λ ≃ Λ') (X : Set Λ) (M : QuditAlgebra (fun
   have := h.relabel e.symm
   rwa [relabel_symm_relabel, Equiv.symm_image_image] at this
 
-/-- M2, Proposition 4.4: `relabel e` carries `𝒜(X)` onto `𝒜(e '' X)`. -/
+/-- The relabelling `relabel e` carries `𝒜(X)` onto `𝒜(e '' X)`. -/
 theorem relabel_localAlgebra (e : Λ ≃ Λ') (X : Set Λ) :
     (localAlgebra (σ := fun _ : Λ => α) X).map (relabel e).toStarAlgHom =
       localAlgebra (σ := fun _ : Λ' => α) (e '' X) := by

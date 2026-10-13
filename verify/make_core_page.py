@@ -82,8 +82,8 @@ def latex(its) -> str:
             "\\usepackage{amsmath,amssymb}\n\\usepackage[hidelinks]{hyperref}\n"
             "\\newcommand{\\Aql}{\\mathcal{A}_{\\mathrm{ql}}}\n\\setlength{\\parindent}{0pt}\n"
             "\\title{The sealed statements of LocalAlgebrasLean}\\date{}\n\\begin{document}\\maketitle\n"
-            f"These {k} statements are what \\texttt{{lake comparator}} checks; everything else in the library "
-            "serves their proofs. Each is followed by the name of its formal version in "
+            f"These {k} statements are the ones that \\texttt{{lake comparator}} checks. "
+            "Each is followed by the name of its formal version in "
             "\\texttt{verify/Challenge.lean}.\n\n" + "\n".join(body) +
             f"\n\\vfill{{\\footnotesize SHA-256 of \\texttt{{verify/Challenge.lean}}: \\texttt{{{digest()}}}}}\n\\end{{document}}\n")
 

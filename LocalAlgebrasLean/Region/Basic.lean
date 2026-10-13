@@ -12,14 +12,10 @@ import Mathlib.Algebra.Group.Defs
 A region index is a preordered set of regions with a symmetric orthogonality relation that is
 antitone: a subregion of a region orthogonal to `O₂` is again orthogonal to `O₂`. It is modelled
 on the index set with orthogonality of the quasi-local algebras of Bratteli and Robinson (Operator
-Algebras and Quantum Statistical Mechanics 1, §2.6); agreement in detail is unchecked (L1,
-Definitions against the standard). For a lattice, regions are sets of sites and
-orthogonal means disjoint; for a spacetime, orthogonal means spacelike separated, and the
-causal-dependence relation of algebraic quantum field theory is an extension of this structure
-(LinearAQFT's `CausalIndex`).
-
-Moved from LinearAQFT `Causal/Basic.lean` (milestone A, Definitions 1 and 2) without the
-dependence relation; milestone L1 of this library.
+Algebras and Quantum Statistical Mechanics 1, §2.6); the two definitions have not been compared
+in detail. For a lattice, regions are sets of sites and orthogonal means disjoint; for a
+spacetime, orthogonal means spacelike separated, and the causal-dependence relation of algebraic
+quantum field theory is an extension of this structure (LinearAQFT's `CausalIndex`).
 
 ## Main definitions
 
@@ -31,9 +27,8 @@ dependence relation; milestone L1 of this library.
 
 namespace LocalAlgebrasLean
 
-/-- A region index on a preordered set `R` of regions (L1, Definition 1; LinearAQFT milestone A,
-Definition 1, without the dependence relation): a symmetric orthogonality relation, antitone in
-its first argument. -/
+/-- A region index on a preordered set `R` of regions: a symmetric orthogonality relation, antitone
+in its first argument. -/
 structure RegionIndex (R : Type*) [Preorder R] where
   /-- Orthogonality (separation) of two regions. -/
   Orthogonal : R → R → Prop
@@ -48,8 +43,8 @@ theorem orthogonal_mono_right (I : RegionIndex R) ⦃O₁ O₂ O₃ : R⦄ (h : 
     (hO : I.Orthogonal O₁ O₂) : I.Orthogonal O₁ O₃ :=
   I.orthogonal_symm (I.orthogonal_mono_left h (I.orthogonal_symm hO))
 
-/-- An isomorphism of region indices (L1, Definition 1; LinearAQFT milestone A, Definition 2): an
-order isomorphism of the regions that preserves and reflects orthogonality. -/
+/-- An isomorphism of region indices: an order isomorphism of the regions that preserves and
+reflects orthogonality. -/
 structure Iso (I : RegionIndex R) (I' : RegionIndex R') where
   /-- The underlying order isomorphism of regions. -/
   toOrderIso : R ≃o R'

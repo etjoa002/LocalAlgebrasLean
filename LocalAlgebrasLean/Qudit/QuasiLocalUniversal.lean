@@ -11,15 +11,15 @@ import Mathlib.RingTheory.SimpleRing.Matrix
 /-!
 # The universal property of the quasi-local algebra
 
-Milestone L5, Section 8. A compatible family of unital star
-homomorphisms `β_X` from the matrix algebras of the finite regions into a C*-algebra `D` extends
-uniquely to a star homomorphism of the quasi-local algebra `A(Λ)`, which is isometric when
-`D ≠ 0` (Theorem 20). The extension is first defined on the strictly local operators, where it
-is forced, and is then extended by continuity; uniqueness follows because star homomorphisms of
-C*-algebras are contractive, hence continuous. When the family consists of injective maps whose
-ranges have a dense union, the extension is a star isomorphism (Corollary 21), and for two
-reference configurations this gives the canonical isomorphism `θ` with `θ ∘ ι_X = ι'_X`, an
-isomorphism of the nets in the quasi-local algebras (Corollary 22).
+A compatible family of unital star homomorphisms `β_X` from the matrix algebras of the finite
+regions into a C*-algebra `D` extends uniquely to a star homomorphism of the quasi-local algebra
+`A(Λ)`, which is isometric when `D ≠ 0` (`quasiLocal_lift`). The extension is first defined on
+the strictly local operators, where it is forced, and is then extended by continuity; uniqueness
+follows because star homomorphisms of C*-algebras are contractive, hence continuous. When the
+family consists of injective maps whose ranges have a dense union, the extension is a star
+isomorphism (`quasiLocalEquiv`), and for two reference configurations this gives the canonical
+isomorphism `θ` with `θ ∘ ι_X = ι'_X`, an isomorphism of the nets in the quasi-local algebras
+(`refEquiv`).
 
 The finite regions of a family are indexed by `Finset Λ`, as in `IsCompatibleFamily`, and the
 local embeddings are read as maps into `A(Λ)` (`quasiLocalEmbed`).
@@ -27,18 +27,19 @@ local embeddings are read as maps into `A(Λ)` (`quasiLocalEmbed`).
 ## Main definitions
 
 * `LocalAlgebrasLean.Qudit.quasiLocalEmbed`: `ι_X` as a map into `A(Λ)`.
-* `LocalAlgebrasLean.Qudit.quasiLocal_lift` (L5, Theorem 20).
-* `LocalAlgebrasLean.Qudit.quasiLocalEquiv` (L5, Corollary 21).
-* `LocalAlgebrasLean.Qudit.refEquiv` (L5, Corollary 22).
+* `LocalAlgebrasLean.Qudit.quasiLocal_lift`: the star homomorphism of the universal property.
+* `LocalAlgebrasLean.Qudit.quasiLocalEquiv`: the comparison with other constructions.
+* `LocalAlgebrasLean.Qudit.refEquiv`: the canonical isomorphism between two reference
+  configurations.
 
 ## Main statements
 
 * `injective_of_unital`: unital ring homomorphisms out of a full matrix algebra into a nonzero
-  ring are injective (L5, proof of Theorem 20).
-* `quasiLocal_lift_localEmbed`, `quasiLocal_lift_unique`, `quasiLocal_isometry_lift`
-  (L5, Theorem 20).
-* `quasiLocalEquiv_localEmbed`, `quasiLocalEquiv_unique` (L5, Corollary 21).
-* `refEquiv_localEmbed`, `refEquiv_unique`, `qlNet_isomorphic_refEquiv` (L5, Corollary 22).
+  ring are injective.
+* `quasiLocal_lift_localEmbed`, `quasiLocal_lift_unique`, `quasiLocal_isometry_lift`: the
+  universal property.
+* `quasiLocalEquiv_localEmbed`, `quasiLocalEquiv_unique`.
+* `refEquiv_localEmbed`, `refEquiv_unique`, `qlNet_isomorphic_refEquiv`.
 
 ## Implementation notes
 
@@ -58,9 +59,8 @@ namespace LocalAlgebrasLean.Qudit
 
 /-! ### Simplicity of the matrix algebras -/
 
-/-- L5, proof of Theorem 20: a unital ring homomorphism (in particular a unital star
-homomorphism) from a full matrix algebra `M_n(ℂ)`, `n` nonempty, into a nonzero ring is
-injective, because `M_n(ℂ)` is simple. -/
+/-- A unital ring homomorphism (in particular a unital star homomorphism) from a full matrix algebra
+`M_n(ℂ)`, `n` nonempty, into a nonzero ring is injective, because `M_n(ℂ)` is simple. -/
 theorem injective_of_unital {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
     {D F : Type*} [Semiring D] [Nontrivial D] [FunLike F (Matrix n n ℂ) D]
     [RingHomClass F (Matrix n n ℂ) D] (β : F) : Function.Injective β :=
@@ -73,8 +73,8 @@ section Embed
 variable {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀ u, Fintype (σ u)]
   [∀ u, DecidableEq (σ u)] (s₀ : Config σ)
 
-/-- The local embedding `ι_X` of a finite region (L5, Definition 6) read as a unital star
-homomorphism into the quasi-local algebra `A(Λ)`, which contains its range (L5, Corollary 22). -/
+/-- The local embedding `ι_X` of a finite region read as a unital star homomorphism into the
+quasi-local algebra `A(Λ)`, which contains its range. -/
 def quasiLocalEmbed (X : Set Λ) [Fintype X] :
     Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ →⋆ₐ[ℂ] quasiLocalAlgebra s₀ :=
   (localEmbed s₀ X).codRestrict _ fun m => localEmbed_mem_quasiLocalNet s₀ (Set.subset_univ X) m
@@ -85,18 +85,18 @@ theorem coe_quasiLocalEmbed_apply (X : Set Λ) [Fintype X]
     (quasiLocalEmbed s₀ X m : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) = localEmbed s₀ X m :=
   rfl
 
-/-- L5, Proposition 8, read in `A(Λ)`: `ι_X` is injective. -/
+/-- Read in `A(Λ)`, `ι_X` is injective. -/
 theorem quasiLocalEmbed_injective (X : Set Λ) [Fintype X] :
     Function.Injective (quasiLocalEmbed s₀ X) :=
   fun _ _ h => localEmbed_injective s₀ X (congrArg Subtype.val h)
 
-/-- L5, Proposition 9, read in `A(Λ)`: the local embeddings form a compatible family. -/
+/-- Read in `A(Λ)`, the local embeddings form a compatible family. -/
 theorem isCompatibleFamily_quasiLocalEmbed :
     IsCompatibleFamily (fun X : Finset Λ => quasiLocalEmbed s₀ (X : Set Λ)) :=
   fun _ _ h m => Subtype.ext (localEmbed_extendLinear s₀ (Finset.coe_subset.2 h) m)
 
-/-- L5, Proposition 12(a), read in `A(Λ)`: the union of the ranges of the local embeddings of
-the finite regions is dense. -/
+/-- Read in `A(Λ)`, the union of the ranges of the local embeddings of the finite regions is
+dense. -/
 theorem dense_iUnion_range_quasiLocalEmbed :
     Dense (⋃ X : Finset Λ, Set.range (quasiLocalEmbed s₀ (X : Set Λ))) :=
   (dense_strictlyLocal s₀).mono fun a ha => by
@@ -115,7 +115,7 @@ variable {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀ u, Fintype (σ u
     Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ →⋆ₐ[ℂ] D)
 
 variable {s₀ β} in
-/-- L5, proof of Theorem 20: the prescription `ι_X(m) ↦ β_X(m)` is consistent. -/
+/-- The prescription `ι_X(m) ↦ β_X(m)` is consistent. -/
 private theorem eq_of_localEmbed_eq (hβ : IsCompatibleFamily β) {X Y : Finset Λ}
     {m : Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ}
     {n : Matrix ((x : (Y : Set Λ)) → σ x) ((x : (Y : Set Λ)) → σ x) ℂ}
@@ -141,8 +141,7 @@ private theorem exists_common (a b : strictlyLocal s₀ Set.univ) :
     extendLinear (Finset.coe_subset.2 Finset.subset_union_right) n,
     (localEmbed_extendLinear s₀ _ m).trans hm, (localEmbed_extendLinear s₀ _ n).trans hn⟩
 
-/-- The map `Φ₀` on the strictly local operators (L5, proof of Theorem 20), through a chosen
-representation `a = ι_X(m)`. -/
+/-- The map `Φ₀` on the strictly local operators, through a chosen representation `a = ι_X(m)`. -/
 private def liftFun (a : strictlyLocal s₀ Set.univ) : D :=
   β (exists_finset s₀ a).choose (exists_finset s₀ a).choose_spec.choose
 
@@ -154,8 +153,7 @@ private theorem liftFun_eq (hβ : IsCompatibleFamily β) {a : strictlyLocal s₀
 
 variable {β}
 
-/-- L5, proof of Theorem 20: `Φ₀` is a unital star homomorphism on the strictly local
-operators. -/
+/-- The map `Φ₀` is a unital star homomorphism on the strictly local operators. -/
 private def liftStrict (hβ : IsCompatibleFamily β) : strictlyLocal s₀ Set.univ →⋆ₐ[ℂ] D where
   toFun := liftFun s₀ β
   map_one' := by
@@ -189,7 +187,7 @@ private theorem coe_inclStrict_apply (a : strictlyLocal s₀ Set.univ) :
     (inclStrict s₀ a : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) = a :=
   rfl
 
-/-- L5, Proposition 12(a): the strictly local operators are dense in `A(Λ)`. -/
+/-- The strictly local operators are dense in `A(Λ)`. -/
 private theorem denseRange_inclStrict : DenseRange (inclStrict s₀) :=
   (dense_strictlyLocal s₀).mono fun a ha => ⟨⟨a, ha⟩, rfl⟩
 
@@ -198,8 +196,8 @@ private theorem inclStrict_eq_quasiLocalEmbed {a : strictlyLocal s₀ Set.univ} 
     (h : localEmbed s₀ (X : Set Λ) m = a) : inclStrict s₀ a = quasiLocalEmbed s₀ (X : Set Λ) m :=
   Subtype.ext h.symm
 
-/-- L5, proof of Theorem 20: `‖Φ₀(ι_X(m))‖ = ‖β_X(m)‖ ≤ ‖m‖ = ‖ι_X(m)‖`, the inequality because
-star homomorphisms of C*-algebras are contractive. -/
+/-- The bound `‖Φ₀(ι_X(m))‖ = ‖β_X(m)‖ ≤ ‖m‖ = ‖ι_X(m)‖`, the inequality because star homomorphisms
+of C*-algebras are contractive. -/
 private theorem norm_liftStrict_le (hβ : IsCompatibleFamily β) (a : strictlyLocal s₀ Set.univ) :
     ‖liftStrict s₀ hβ a‖ ≤ 1 * ‖inclStrict s₀ a‖ := by
   obtain ⟨X, m, hm⟩ := exists_finset s₀ a
@@ -215,7 +213,7 @@ private theorem liftCLM_inclStrict (hβ : IsCompatibleFamily β) (a : strictlyLo
     liftCLM s₀ hβ (inclStrict s₀ a) = liftStrict s₀ hβ a :=
   LinearMap.extendOfNorm_eq (denseRange_inclStrict s₀) ⟨1, norm_liftStrict_le s₀ hβ⟩ a
 
-/-- L5, proof of Theorem 20: the extension preserves the star, by continuity. -/
+/-- The extension preserves the star, by continuity. -/
 private theorem liftCLM_star (hβ : IsCompatibleFamily β) (a : quasiLocalAlgebra s₀) :
     liftCLM s₀ hβ (star a) = star (liftCLM s₀ hβ a) := by
   refine (denseRange_inclStrict s₀).induction_on
@@ -229,10 +227,9 @@ private theorem liftCLM_star (hβ : IsCompatibleFamily β) (a : quasiLocalAlgebr
 
 variable (β)
 
-/-- L5, Theorem 20 (universal property): the star homomorphism `Φ : A(Λ) → D` determined by a
-compatible family `β` of unital star homomorphisms of the matrix algebras of the finite regions.
-It is defined on the strictly local operators by `Φ(ι_X(m)) = β_X(m)` and extended by
-continuity. -/
+/-- Universal property: the star homomorphism `Φ : A(Λ) → D` determined by a compatible family `β`
+of unital star homomorphisms of the matrix algebras of the finite regions. It is defined on the
+strictly local operators by `Φ(ι_X(m)) = β_X(m)` and extended by continuity. -/
 def quasiLocal_lift (hβ : IsCompatibleFamily β) : quasiLocalAlgebra s₀ →⋆ₐ[ℂ] D where
   toFun := liftCLM s₀ hβ
   map_one' := by
@@ -262,7 +259,7 @@ theorem continuous_quasiLocal_lift (hβ : IsCompatibleFamily β) :
     Continuous (quasiLocal_lift s₀ β hβ) :=
   (liftCLM s₀ hβ).continuous
 
-/-- L5, Theorem 20: `Φ ∘ ι_X = β_X` for every finite region `X`. -/
+/-- The map of the universal property satisfies `Φ ∘ ι_X = β_X` for every finite region `X`. -/
 theorem quasiLocal_lift_localEmbed (hβ : IsCompatibleFamily β) (X : Finset Λ)
     (m : Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ) :
     quasiLocal_lift s₀ β hβ (quasiLocalEmbed s₀ (X : Set Λ) m) = β X m := by
@@ -272,8 +269,8 @@ theorem quasiLocal_lift_localEmbed (hβ : IsCompatibleFamily β) (X : Finset Λ)
   rw [quasiLocal_lift_apply, ← inclStrict_eq_quasiLocalEmbed s₀ h, liftCLM_inclStrict,
     liftStrict_apply, liftFun_eq hβ h]
 
-/-- L5, Theorem 20 (uniqueness): every star homomorphism `Ψ : A(Λ) → D`, unital or not, with
-`Ψ ∘ ι_X = β_X` for every finite region `X` is the map of the universal property. -/
+/-- Uniqueness in the universal property: every star homomorphism `Ψ : A(Λ) → D`, unital or not,
+with `Ψ ∘ ι_X = β_X` for every finite region `X` is the map of the universal property. -/
 theorem quasiLocal_lift_unique (hβ : IsCompatibleFamily β) {F : Type*}
     [FunLike F (quasiLocalAlgebra s₀) D] [NonUnitalAlgHomClass F ℂ (quasiLocalAlgebra s₀) D]
     [StarHomClass F (quasiLocalAlgebra s₀) D] (Ψ : F)
@@ -289,7 +286,7 @@ theorem quasiLocal_lift_unique (hβ : IsCompatibleFamily β) {F : Type*}
   simp only [Function.comp_apply]
   rw [inclStrict_eq_quasiLocalEmbed s₀ hm, h, quasiLocal_lift_localEmbed]
 
-/-- L5, Theorem 20: if `D ≠ 0`, the map of the universal property is isometric. -/
+/-- If `D ≠ 0`, the map of the universal property is isometric. -/
 theorem quasiLocal_isometry_lift [Nontrivial D] (hβ : IsCompatibleFamily β) :
     Isometry (quasiLocal_lift s₀ β hβ) := by
   refine AddMonoidHomClass.isometry_of_norm _ fun a => ?_
@@ -303,7 +300,7 @@ theorem quasiLocal_isometry_lift [Nontrivial D] (hβ : IsCompatibleFamily β) :
     NonUnitalStarAlgHom.norm_map (β X) (injective_of_unital (β X)) m]
   exact (norm_localEmbed s₀ (X : Set Λ) m).symm
 
-/-- L5, Theorem 20: if `D ≠ 0`, the map of the universal property is injective. -/
+/-- If `D ≠ 0`, the map of the universal property is injective. -/
 theorem quasiLocal_lift_injective [Nontrivial D] (hβ : IsCompatibleFamily β) :
     Function.Injective (quasiLocal_lift s₀ β hβ) :=
   (quasiLocal_isometry_lift s₀ hβ).injective
@@ -320,7 +317,7 @@ variable {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀ u, Fintype (σ u
     Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ →⋆ₐ[ℂ] D}
 
 include s₀ in
-/-- L5, proof of Corollary 21: an injective unital `β_∅` forces `D ≠ 0`. -/
+/-- An injective unital `β_∅` forces `D ≠ 0`. -/
 private theorem nontrivial_of_injective (hinj : ∀ X, Function.Injective (β X)) : Nontrivial D := by
   have : Nonempty ((x : ((∅ : Finset Λ) : Set Λ)) → σ x) := ⟨fun x => s₀ x⟩
   refine nontrivial_of_ne 1 0 fun h => one_ne_zero (α := Matrix
@@ -344,9 +341,9 @@ private theorem bijective_quasiLocal_lift (hβ : IsCompatibleFamily β)
 
 variable (β)
 
-/-- L5, Corollary 21 (comparison with other constructions): for a compatible family of injective
-unital star homomorphisms `β_X` whose ranges have a dense union in `D`, the map of the universal
-property is a star isomorphism `A(Λ) ≃ D`. -/
+/-- Comparison with other constructions: for a compatible family of injective unital star
+homomorphisms `β_X` whose ranges have a dense union in `D`, the map of the universal property is a
+star isomorphism `A(Λ) ≃ D`. -/
 def quasiLocalEquiv (hβ : IsCompatibleFamily β) (hinj : ∀ X, Function.Injective (β X))
     (hdense : Dense (⋃ X : Finset Λ, Set.range (β X))) : quasiLocalAlgebra s₀ ≃⋆ₐ[ℂ] D :=
   StarAlgEquiv.ofBijective (quasiLocal_lift s₀ β hβ)
@@ -359,15 +356,15 @@ theorem quasiLocalEquiv_apply (hβ : IsCompatibleFamily β) (hinj : ∀ X, Funct
     quasiLocalEquiv s₀ β hβ hinj hdense a = quasiLocal_lift s₀ β hβ a :=
   rfl
 
-/-- L5, Corollary 21: `Φ ∘ ι_X = β_X` for every finite region `X`. -/
+/-- The isomorphism `quasiLocalEquiv` satisfies `Φ ∘ ι_X = β_X` for every finite region `X`. -/
 theorem quasiLocalEquiv_localEmbed (hβ : IsCompatibleFamily β)
     (hinj : ∀ X, Function.Injective (β X)) (hdense : Dense (⋃ X : Finset Λ, Set.range (β X)))
     (X : Finset Λ) (m : Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ) :
     quasiLocalEquiv s₀ β hβ hinj hdense (quasiLocalEmbed s₀ (X : Set Λ) m) = β X m :=
   quasiLocal_lift_localEmbed s₀ hβ X m
 
-/-- L5, Corollary 21 (uniqueness): a star isomorphism `Φ : A(Λ) ≃ D` with `Φ ∘ ι_X = β_X` for
-every finite region `X` is `quasiLocalEquiv`. -/
+/-- Uniqueness of the comparison: a star isomorphism `Φ : A(Λ) ≃ D` with `Φ ∘ ι_X = β_X` for every
+finite region `X` is `quasiLocalEquiv`. -/
 theorem quasiLocalEquiv_unique (hβ : IsCompatibleFamily β)
     (hinj : ∀ X, Function.Injective (β X)) (hdense : Dense (⋃ X : Finset Λ, Set.range (β X)))
     (Φ : quasiLocalAlgebra s₀ ≃⋆ₐ[ℂ] D)
@@ -385,16 +382,16 @@ section Reference
 variable {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀ u, Fintype (σ u)]
   [∀ u, DecidableEq (σ u)] (s₀ s₀' : Config σ)
 
-/-- L5, Corollary 22 (the canonical isomorphism): the star isomorphism
-`θ : A(Λ) ≃ A'(Λ)` between the quasi-local algebras of two reference configurations with
-`θ ∘ ι_X = ι'_X` for every finite region `X`, given by Corollary 21 with `β_X = ι'_X`. -/
+/-- The canonical isomorphism: the star isomorphism `θ : A(Λ) ≃ A'(Λ)` between the quasi-local
+algebras of two reference configurations with `θ ∘ ι_X = ι'_X` for every finite region `X`, given by
+`quasiLocalEquiv` with `β_X = ι'_X`. -/
 def refEquiv : quasiLocalAlgebra s₀ ≃⋆ₐ[ℂ] quasiLocalAlgebra s₀' :=
   quasiLocalEquiv s₀ (fun X : Finset Λ => quasiLocalEmbed s₀' (X : Set Λ))
     (isCompatibleFamily_quasiLocalEmbed s₀') (fun _ => quasiLocalEmbed_injective s₀' _)
     (dense_iUnion_range_quasiLocalEmbed s₀')
 
-/-- L5, Corollary 22: `θ ∘ ι_X = ι'_X` for every finite region `X`, with any instance
-`Fintype X`. -/
+/-- The canonical isomorphism satisfies `θ ∘ ι_X = ι'_X` for every finite region `X`, with any
+instance `Fintype X`. -/
 theorem refEquiv_localEmbed (X : Set Λ) [Fintype X]
     (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     refEquiv s₀ s₀' (quasiLocalEmbed s₀ X m) = quasiLocalEmbed s₀' X m := by
@@ -410,8 +407,8 @@ theorem refEquiv_localEmbed (X : Set Λ) [Fintype X]
   rw [e₁, e₂]
   exact h
 
-/-- L5, Corollary 22 (uniqueness): a star isomorphism `A(Λ) ≃ A'(Λ)` with `θ ∘ ι_X = ι'_X` for
-every finite region `X` is `refEquiv`. -/
+/-- Uniqueness of the canonical isomorphism: a star isomorphism `A(Λ) ≃ A'(Λ)` with `θ ∘ ι_X = ι'_X`
+for every finite region `X` is `refEquiv`. -/
 theorem refEquiv_unique (θ : quasiLocalAlgebra s₀ ≃⋆ₐ[ℂ] quasiLocalAlgebra s₀')
     (h : ∀ (X : Finset Λ) (m : Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ),
       θ (quasiLocalEmbed s₀ (X : Set Λ) m) = quasiLocalEmbed s₀' (X : Set Λ) m) :
@@ -419,9 +416,8 @@ theorem refEquiv_unique (θ : quasiLocalAlgebra s₀ ≃⋆ₐ[ℂ] quasiLocalAl
   quasiLocalEquiv_unique s₀ _ _ _ θ h
 
 variable {s₀ s₀'} in
-/-- L5, proof of Corollary 22: a continuous map `f : A(Λ) → A'(Λ)` with `f ∘ ι_X = ι'_X` for
-every finite region `X` maps `A_ql(O)`, the closure of the strictly local operators of `O`, into
-`A'_ql(O)`. -/
+/-- A continuous map `f : A(Λ) → A'(Λ)` with `f ∘ ι_X = ι'_X` for every finite region `X` maps
+`A_ql(O)`, the closure of the strictly local operators of `O`, into `A'_ql(O)`. -/
 private theorem mapsTo_qlNet {f : quasiLocalAlgebra s₀ → quasiLocalAlgebra s₀'}
     (hf : Continuous f)
     (h : ∀ (X : Finset Λ) (m : Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ),
@@ -455,8 +451,8 @@ private theorem continuous_starAlgEquiv {A B : Type*} [CStarAlgebra A] [CStarAlg
     rw [one_mul]
     exact NonUnitalStarAlgHom.norm_apply_le θ a
 
-/-- L5, Corollary 22: the canonical isomorphism `θ` is an isomorphism of the nets in the
-quasi-local algebras (L1, Definition 4(3)), with the identity of the region index:
+/-- The canonical isomorphism `θ` is an isomorphism of the nets in the quasi-local algebras: with
+the identity of the region index it is a covariance pair, as in `Net.Isomorphic`,
 `θ(A_ql(O)) = A'_ql(O)` for every region `O`. -/
 theorem qlNet_isomorphic_refEquiv :
     Net.IsCovariancePair (qlNet s₀) (qlNet s₀') (RegionIndex.Iso.refl (subsetIndex Λ))

@@ -163,7 +163,7 @@ print("== check 6 (permutations) ==")
 run_perm((2,) * 6, "W=6 q=2")
 run_perm((3,) * 4, "W=4 q=3")
 
-print("== 7 degenerate section ==")
+print("== 7 degenerate cases ==")
 for q in [(2, 3, 2), (1, 1, 1), (2,)]:
     N = int(np.prod(q)); c = complex(2, -3)
     assert eq(iota(q, (), np.array([[c]])), c * np.eye(N, dtype=complex))
@@ -187,7 +187,7 @@ for X in subsets(4):
     assert eq(iota(q, X, m), embed(q, X, m))
     X2 = tuple(x for x in X if q[x] > 1)
     assert local_dim(q, X2) == d and eq(iota(q, X, m), iota(q, X2, m))
-print("alphabet size 1: all-trivial window gives 1-dim H, iota_X(m) = m; trivial sites are invisible: ok")
+print("alphabet size 1: a window of one-letter sites gives dim H = 1 and iota_X(m) = m; one-letter sites do not change iota_X: ok")
 for q in [(2, 2, 2), (3, 2, 3), (1, 2)]:
     d = int(np.prod(q)); m = rand_m(d); W = tuple(range(len(q)))
     assert eq(iota(q, W, m), m) and eq(embed(q, W, m), m)
@@ -246,13 +246,13 @@ for q in [(2, 3, 2, 3), (3, 2, 3, 2, 2), (2, 2, 3)]:
     run_ref(q, s0, differ_at({random.randrange(n)}), "ref: one site")
     run_ref(q, s0, differ_at(set(random.sample(range(n), 2))), "ref: two sites")
     run_ref(q, s0, differ_at(set(range(n))), "ref: every site")
-print("ref independence (finite window: F = F' = all configurations, so only W's form is tested): ok")
+print("independence of the reference configuration (on a finite window F = F' is the set of all configurations, so only the form of W is tested): ok")
 
 print("== 9 distance from the reference projection to the local algebras, finite-window illustration ==")
-print("NOTE: a finite window can only ILLUSTRATE the bound; the infinite-volume statement is not tested here.")
+print("On a finite window the bound is illustrated; the statement on the infinite lattice is not tested here.")
 print("Per proper X: lower bound by an explicit functional phi = (<psi0|.|psi0> - <psi1|.|psi1>)/2 of norm <= 1,")
 print("psi0 = e_{s0}, psi1 = e_t (t = s0 with letter 1 at u not in X), phi(iota_X(m)) = 0 exactly, phi(P) = 1/2;")
-print("upper bound by m = E/2 (SVD, tolerance 1e-9); and random search near E/2 as a sanity floor.")
+print("upper bound by m = E/2 (SVD, tolerance 1e-9); a random search near E/2 finds no smaller distance.")
 mind = None; mindim = None
 for n in range(2, 8):
     q = (2,) * n; N = 2 ** n; s0 = (0,) * n

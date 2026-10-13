@@ -17,7 +17,7 @@
 
 ## Lean
 
-- One definition per concept; libraries that build on this one import it rather than redefine.
+- One definition per concept; libraries that build on this one import it and do not redefine it.
 - Declaration names are ASCII and follow Mathlib's naming and style; lines are at most 100
   characters.
 - No unfinished proofs, no added axioms, no blanket import of Mathlib; assumptions are hypotheses

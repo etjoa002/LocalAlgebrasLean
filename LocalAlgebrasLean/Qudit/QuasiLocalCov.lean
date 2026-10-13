@@ -9,16 +9,15 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 /-!
 # Symmetries of the quasi-local net and independence of the reference configuration
 
-Milestone L5, Sections 6 and 7. A bijection `φ` between the finitely
-supported configurations of two systems acts on `ℓ²` by the unitary `(Wψ)(s') = ψ(φ⁻¹ s')`, which
-maps `e_s` to `e_{φ s}`; when `φ` is compatible with gluing on finite regions `X`, `X'` through a
-bijection `φ_X` of the letters, conjugation by `W` carries `ι_X(m)` to `ι'_{X'}(φ_* m)`
-(the transport lemma). This one computation gives three results.
+A bijection `φ` between the finitely supported configurations of two systems acts on `ℓ²` by the
+unitary `(Wψ)(s') = ψ(φ⁻¹ s')`, which maps `e_s` to `e_{φ s}`; when `φ` is compatible with gluing
+on finite regions `X`, `X'` through a bijection `φ_X` of the letters, conjugation by `W` carries
+`ι_X(m)` to `ι'_{X'}(φ_* m)` (the transport lemma). Three results follow from this computation.
 
 * A group acting on the sites, with a uniform alphabet and an invariant reference configuration,
   permutes the finitely supported configurations; the resulting unitaries `U_g` implement a
   covariance of the quasi-local net and of the net in the quasi-local algebra, for the action
-  `O ↦ gO = {x | g⁻¹ • x ∈ O}` of L1.
+  `O ↦ gO = {x | g⁻¹ • x ∈ O}` (`actionHom`).
 * Reference configurations differing at finitely many sites have the same finitely supported
   configurations, but not the same Lean type `FinConfig`; the canonical identification of the two
   types gives the unitary `e_s ↦ e_s`, which intertwines the local embeddings exactly.
@@ -27,21 +26,22 @@ bijection `φ_X` of the letters, conjugation by `W` carries `ι_X(m)` to `ι'_{X
 
 ## Main definitions
 
-* `transportUnitary` (L5, Lemma 16).
-* `configAction`, `letterAction`, `symUnitary`, `symAut`, `qlAut` (L5, Definition 17 and
-  Proposition 18).
-* `finConfigEquiv` (L5, Section 7, reference configurations differing at finitely many sites).
-* `letterPerm`, `letterPermLocal` (L5, Proposition 19).
+* `transportUnitary`: the unitary of a bijection of the finitely supported configurations.
+* `configAction`, `letterAction`, `symUnitary`, `symAut`, `qlAut`: the action of a group of
+  symmetries.
+* `finConfigEquiv`: reference configurations differing at finitely many sites.
+* `letterPerm`, `letterPermLocal`: site-wise permutations of the letters.
 
 ## Main statements
 
-* `transport_localEmbed` (L5, Lemma 16).
+* `transport_localEmbed`: the transport lemma.
 * `symUnitary_single`, `symUnitary_symm`, `adjoint_symUnitary`, `symAut_localEmbed`,
-  `quasiLocalNet_isCovariantUnder`, `qlNet_isCovariantUnder` (L5, Proposition 18).
-* `conj_finConfigEquiv_localEmbed`, `isCovariancePair_finConfigEquiv` (L5, Section 7).
+  `quasiLocalNet_isCovariantUnder`, `qlNet_isCovariantUnder`: covariance under the symmetries.
+* `conj_finConfigEquiv_localEmbed`, `isCovariancePair_finConfigEquiv`: reference configurations
+  differing at finitely many sites.
 * `conj_letterPerm_localEmbed`, `isCovariancePair_letterPerm`,
   `isCovariancePair_qlNet_letterPerm`, `quasiLocalNet_isomorphic_of_ref`,
-  `qlNet_isomorphic_of_ref` (L5, Proposition 19).
+  `qlNet_isomorphic_of_ref`: independence of the reference configuration.
 -/
 
 open scoped ENNReal
@@ -64,9 +64,9 @@ private theorem norm_pullL_univ_le {ι κ : Type*} (f : ι → κ) (hf : Set.Inj
     (ψ : lp (fun _ : κ => ℂ) 2) : ‖pullL Set.univ f hf ψ‖ ≤ ‖ψ‖ := by
   simpa using (pullL Set.univ f hf).le_of_opNorm_le (opNorm_pullL_le _ _ _) ψ
 
-/-- L5, Lemma 16 (transport): the unitary `W : H → H'`, `(Wψ)(s') = ψ(φ⁻¹ s')`, of a bijection
-`φ : F → F'` of the finitely supported configurations. It and its inverse `ψ' ↦ ψ' ∘ φ` are
-partial permutations (`pullL`, L5, Lemma 5) defined on the whole index set. -/
+/-- The transport unitary `W : H → H'`, `(Wψ)(s') = ψ(φ⁻¹ s')`, of a bijection `φ : F → F'` of the
+finitely supported configurations. It and its inverse `ψ' ↦ ψ' ∘ φ` are partial permutations
+(`pullL`) defined on the whole index set. -/
 def transportUnitary (φ : FinConfig s₀ ≃ FinConfig s₀') :
     ConfigSpace s₀ ≃ₗᵢ[ℂ] ConfigSpace s₀' where
   toFun := pullL Set.univ φ.symm φ.symm.injective.injOn
@@ -95,7 +95,7 @@ theorem transportUnitary_symm_apply (φ : FinConfig s₀ ≃ FinConfig s₀') (�
   pullL_univ_apply φ φ.injective.injOn ψ' s
 
 open Classical in
-/-- L5, Lemma 16: `W e_s = e_{φ s}`. -/
+/-- The transport unitary maps basis vectors to basis vectors, `W e_s = e_{φ s}`. -/
 theorem transportUnitary_single (φ : FinConfig s₀ ≃ FinConfig s₀') (s : FinConfig s₀) :
     transportUnitary φ (lp.single 2 s 1) = lp.single 2 (φ s) 1 := by
   refine lp.ext (funext fun s' => ?_)
@@ -104,10 +104,10 @@ theorem transportUnitary_single (φ : FinConfig s₀ ≃ FinConfig s₀') (s : F
 variable [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)]
   [DecidableEq Λ'] [∀ u, Fintype (σ' u)] [∀ u, DecidableEq (σ' u)]
 
-/-- L5, Lemma 16 (transport): if the bijection `φ : F → F'` and the bijection
-`φ_X : σ_X → σ'_{X'}` of letters satisfy `(φ s)_{X'} = φ_X(s_X)` and
-`φ(ξ s_{Xᶜ}) = (φ_X ξ) (φ s)_{X'ᶜ}`, then `W ι_X(m) W* = ι'_{X'}(φ_* m)`, where
-`φ_* m = Matrix.reindex φ_X φ_X m` has entries `m(φ_X⁻¹ ξ', φ_X⁻¹ η')`. -/
+/-- Transport lemma: if the bijection `φ : F → F'` and the bijection `φ_X : σ_X → σ'_{X'}` of
+letters satisfy `(φ s)_{X'} = φ_X(s_X)` and `φ(ξ s_{Xᶜ}) = (φ_X ξ) (φ s)_{X'ᶜ}`, then
+`W ι_X(m) W* = ι'_{X'}(φ_* m)`, where `φ_* m = Matrix.reindex φ_X φ_X m` has entries
+`m(φ_X⁻¹ ξ', φ_X⁻¹ η')`. -/
 theorem transport_localEmbed (φ : FinConfig s₀ ≃ FinConfig s₀') {X : Set Λ} {X' : Set Λ'}
     [Fintype X] [Fintype X'] (φX : ((x : X) → σ x) ≃ ((x : X') → σ' x))
     (h₁ : ∀ s : FinConfig s₀, restrict X' (φ s).1 = φX (restrict X s.1))
@@ -155,7 +155,7 @@ theorem coe_restrictStarAlgEquiv_apply {B B' : Type*} [CStarAlgebra B] [CStarAlg
   rfl
 
 /-- A covariance pair of the quasi-local nets restricts to a covariance pair of the nets in the
-quasi-local algebras (L5, proofs of Propositions 18(d) and 19). -/
+quasi-local algebras. -/
 theorem isCovariancePair_qlNet {Λ' : Type*} {σ'' : Λ' → Type*} [DecidableEq Λ']
     [∀ u, Fintype (σ'' u)] [∀ u, DecidableEq (σ'' u)] {s₀'' : Config σ''}
     (κ : (subsetIndex Λ).Iso (subsetIndex Λ'))
@@ -182,8 +182,7 @@ theorem isCovariancePair_qlNet {Λ' : Type*} {σ'' : Λ' → Type*} [DecidableEq
     exact ⟨a, hc, hab⟩
 
 /-- A star isomorphism carrying every `ι_X(m)` to `ι'_X(e_X · m)`, for bijections `e_X` of the
-letters of `X`, maps the strictly local operators of `O` onto those of `O` (L5, proofs of
-Proposition 19 and of the finite-difference case). -/
+letters of `X`, maps the strictly local operators of `O` onto those of `O`. -/
 theorem image_strictlyLocal_eq
     (α : (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) ≃⋆ₐ[ℂ] (ConfigSpace s₀' →L[ℂ] ConfigSpace s₀'))
     (e : ∀ X : Set Λ, ((x : X) → σ x) ≃ ((x : X) → σ' x))
@@ -224,22 +223,22 @@ section Action
 
 variable {Γ Λ Q : Type*} [Group Γ] [MulAction Γ Λ] {s₀ : Config (fun _ : Λ => Q)}
 
-/-- L5, proof of Proposition 18(a): `D(gs) = g D(s)` is finite for an invariant reference
-configuration. -/
+/-- For an invariant reference configuration, `gs` differs from `s₀` at finitely many sites:
+`D(gs) = g D(s)`, where `D(s)` is the set of sites at which `s` differs from `s₀`. -/
 theorem finite_smul (hs₀ : ∀ (g : Γ) (u : Λ), s₀ (g • u) = s₀ u) (g : Γ) (s : FinConfig s₀) :
     {u | s.1 (g⁻¹ • u) ≠ s₀ u}.Finite := by
   have h := s.2.preimage (f := fun u => g⁻¹ • u) (MulAction.injective g⁻¹).injOn
   refine h.subset fun u hu => ?_
   simpa [Set.mem_preimage, hs₀] using hu
 
-/-- The configuration `gs`, `(gs)(u) = s(g⁻¹ u)`, of L5, Definition 17. -/
+/-- The configuration `gs`, `(gs)(u) = s(g⁻¹ u)`. -/
 private def smulFin (hs₀ : ∀ (g : Γ) (u : Λ), s₀ (g • u) = s₀ u) (g : Γ) (s : FinConfig s₀) :
     FinConfig s₀ :=
   ⟨fun u => s.1 (g⁻¹ • u), finite_smul hs₀ g s⟩
 
-/-- L5, Definition 17 and Proposition 18(a): a group acting on the sites, with a uniform alphabet
-`Q` and an invariant reference configuration, acts on the finitely supported configurations by
-`(gs)(u) = s(g⁻¹ u)`; this is a left action by bijections. -/
+/-- A group acting on the sites, with a uniform alphabet `Q` and an invariant reference
+configuration, acts on the finitely supported configurations by `(gs)(u) = s(g⁻¹ u)`; this is a left
+action by bijections. -/
 def configAction (hs₀ : ∀ (g : Γ) (u : Λ), s₀ (g • u) = s₀ u) :
     Γ →* Equiv.Perm (FinConfig s₀) where
   toFun g :=
@@ -259,7 +258,7 @@ theorem configAction_symm (hs₀ : ∀ (g : Γ) (u : Λ), s₀ (g • u) = s₀ 
     (configAction hs₀ g).symm = configAction hs₀ g⁻¹ :=
   (map_inv (configAction hs₀) g).symm
 
-/-- L5, Definition 17: the bijection `g_* : σ_X → σ_{gX}`, `(g_* ξ)(v) = ξ(g⁻¹ v)`, where
+/-- The bijection `g_* : σ_X → σ_{gX}`, `(g_* ξ)(v) = ξ(g⁻¹ v)`, where
 `gX = actionAut g X = {v | g⁻¹ • v ∈ X}`. -/
 def letterAction (g : Γ) (X : Set Λ) : ((x : X) → Q) ≃ ((y : (actionAut g X : Set Λ)) → Q) where
   toFun ξ y := ξ ⟨g⁻¹ • y.1, y.2⟩
@@ -269,9 +268,9 @@ def letterAction (g : Γ) (X : Set Λ) : ((x : X) → Q) ≃ ((y : (actionAut g 
 
 variable (hs₀ : ∀ (g : Γ) (u : Λ), s₀ (g • u) = s₀ u)
 
-/-- L5, Definition 17 and Proposition 18(a): the unitaries `(U_g ψ)(s) = ψ(g⁻¹ s)`, a group
-homomorphism into the unitaries of `H` (surjective linear isometries, Mathlib's
-`LinearIsometryEquiv`), so that `U_1 = 1` and `U_{gh} = U_g U_h`. -/
+/-- The unitaries `(U_g ψ)(s) = ψ(g⁻¹ s)`, a group homomorphism into the unitaries of `H`
+(surjective linear isometries, Mathlib's `LinearIsometryEquiv`), so that `U_1 = 1` and
+`U_{gh} = U_g U_h`. -/
 def symUnitary : Γ →* (ConfigSpace s₀ ≃ₗᵢ[ℂ] ConfigSpace s₀) where
   toFun g := transportUnitary (configAction hs₀ g)
   map_one' := LinearIsometryEquiv.ext fun ψ => lp.ext (funext fun s => by
@@ -289,24 +288,23 @@ theorem symUnitary_apply (g : Γ) (ψ : ConfigSpace s₀) (s : FinConfig s₀) :
   transportUnitary_apply _ ψ s
 
 open Classical in
-/-- L5, Proposition 18(a): `U_g e_s = e_{gs}`. -/
+/-- The unitary `U_g` permutes the basis vectors, `U_g e_s = e_{gs}`. -/
 theorem symUnitary_single (g : Γ) (s : FinConfig s₀) :
     symUnitary hs₀ g (lp.single 2 s 1) = lp.single 2 (configAction hs₀ g s) 1 :=
   transportUnitary_single _ s
 
-/-- L5, Proposition 18(a): `U_g⁻¹ = U_{g⁻¹}`. -/
+/-- The inverse of `U_g` is `U_{g⁻¹}`. -/
 theorem symUnitary_symm (g : Γ) : (symUnitary hs₀ g).symm = symUnitary hs₀ g⁻¹ := by
   rw [map_inv]
   rfl
 
-/-- L5, Proposition 18(a): `U_g^* = U_{g⁻¹}`, the adjoint of `U_g` as a bounded operator. -/
+/-- The adjoint of `U_g` as a bounded operator is `U_{g⁻¹}`, `U_g^* = U_{g⁻¹}`. -/
 theorem adjoint_symUnitary (g : Γ) :
     ContinuousLinearMap.adjoint (symUnitary hs₀ g : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) =
       (symUnitary hs₀ g⁻¹ : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) := by
   rw [LinearIsometryEquiv.adjoint_eq_symm, symUnitary_symm]
 
-/-- L5, Proposition 18(c): the star automorphisms `α_g(a) = U_g a U_g^*` of the bounded operators,
-a group homomorphism. -/
+/-- The star automorphisms `α_g(a) = U_g a U_g^*` of the bounded operators, a group homomorphism. -/
 def symAut : Γ →* ((ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) ≃⋆ₐ[ℂ]
     (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀)) where
   toFun g := (symUnitary hs₀ g).conjStarAlgEquiv
@@ -326,7 +324,7 @@ theorem symAut_apply (g : Γ) (a : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) 
 
 variable [DecidableEq Λ] [Fintype Q] [DecidableEq Q]
 
-/-- L5, Proposition 18(b): `U_g ι_X(m) U_g^* = ι_{gX}(g_* m)`, where `g_* m` is
+/-- Covariance of the local embeddings: `U_g ι_X(m) U_g^* = ι_{gX}(g_* m)`, where `g_* m` is
 `Matrix.reindex g_* g_* m`. Any instance `Fintype` on `gX` may be used. -/
 theorem symAut_localEmbed (g : Γ) (X : Set Λ) [Fintype X] [Fintype (actionAut g X : Set Λ)]
     (m : Matrix ((x : X) → Q) ((x : X) → Q) ℂ) :
@@ -346,7 +344,8 @@ private theorem image_symAut_strictlyLocal_subset (g : Γ) (O : Set Λ) :
   simp only [actionAut_apply, Set.mem_preimage] at hx ⊢
   exact hX hx
 
-/-- L5, proof of Proposition 18(c): `α_g(A₀(O)) = A₀(gO)`. -/
+/-- The automorphism `α_g` carries the strictly local operators of `O` onto those of `gO`,
+`α_g(A₀(O)) = A₀(gO)`. -/
 theorem image_symAut_strictlyLocal (g : Γ) (O : Set Λ) :
     symAut hs₀ g '' (strictlyLocal s₀ O : Set (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀)) =
       strictlyLocal s₀ (actionAut g O) := by
@@ -360,20 +359,19 @@ theorem image_symAut_strictlyLocal (g : Γ) (O : Set Λ) :
   rw [← StarAlgEquiv.mul_apply, ← map_mul, mul_inv_cancel, map_one]
   rfl
 
-/-- L5, Proposition 18(c): the quasi-local net is covariant (L1, Definition 4) under the action
-`κ_g(O) = gO` of `Γ` on the regions (L1's `actionHom`) and the automorphisms `α_g = Ad U_g`,
-`α_g(A(O)) = A(gO)`. -/
+/-- The quasi-local net is covariant (`Net.IsCovariantUnder`) under the action `κ_g(O) = gO` of `Γ`
+on the regions (`actionHom`) and the automorphisms `α_g = Ad U_g`, `α_g(A(O)) = A(gO)`. -/
 theorem quasiLocalNet_isCovariantUnder :
     (quasiLocalNet s₀).IsCovariantUnder (actionHom Γ Λ) (symAut hs₀) :=
   fun g => Net.generated_isCovariancePair _ _ _ _ fun O => image_symAut_strictlyLocal hs₀ g O
 
-/-- L5, Proposition 18(d): each `α_g` maps the quasi-local algebra onto itself. -/
+/-- Each `α_g` maps the quasi-local algebra onto itself. -/
 theorem map_quasiLocalAlgebra_symAut (g : Γ) :
     (quasiLocalAlgebra s₀).map (symAut hs₀ g).toStarAlgHom = quasiLocalAlgebra s₀ :=
   quasiLocalNet_isCovariantUnder hs₀ g Set.univ
 
-/-- L5, Proposition 18(d): the restrictions `α^ql_g` of the `α_g` to the quasi-local algebra, a
-group homomorphism into its star automorphisms. -/
+/-- The restrictions `α^ql_g` of the `α_g` to the quasi-local algebra, a group homomorphism into its
+star automorphisms. -/
 def qlAut : Γ →* (quasiLocalAlgebra s₀ ≃⋆ₐ[ℂ] quasiLocalAlgebra s₀) where
   toFun g := restrictStarAlgEquiv (symAut hs₀ g) _ _ (map_quasiLocalAlgebra_symAut hs₀ g)
   map_one' := StarAlgEquiv.ext fun a => Subtype.ext (by
@@ -390,8 +388,8 @@ theorem coe_qlAut_apply (g : Γ) (a : quasiLocalAlgebra s₀) :
     (qlAut hs₀ g a : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) = symAut hs₀ g a :=
   rfl
 
-/-- L5, Proposition 18(d): the net in the quasi-local algebra is covariant under the action of
-`Γ` on the regions and the automorphisms `α^ql_g`. -/
+/-- The net in the quasi-local algebra is covariant under the action of `Γ` on the regions and the
+automorphisms `α^ql_g`. -/
 theorem qlNet_isCovariantUnder :
     (qlNet s₀).IsCovariantUnder (actionHom Γ Λ) (qlAut hs₀) :=
   fun g => isCovariancePair_qlNet _ _ (quasiLocalNet_isCovariantUnder hs₀ g)
@@ -412,9 +410,9 @@ theorem finite_ne_of_finite_ne (h : {u | s₀ u ≠ s₁ u}.Finite) {s : Config 
   · exact Or.inr (fun h01 => hu (h0.trans h01))
   · exact Or.inl h0
 
-/-- L5, Section 7 (code review of Stages A-B, finding F2): for reference configurations differing
-at finitely many sites, the finitely supported configurations are the same, and the two types
-`FinConfig s₀` and `FinConfig s₁` are identified by the canonical equivalence `s ↦ s`. -/
+/-- For reference configurations differing at finitely many sites, the finitely supported
+configurations are the same, and the two types `FinConfig s₀` and `FinConfig s₁` are identified by
+the canonical equivalence `s ↦ s`. -/
 def finConfigEquiv (h : {u | s₀ u ≠ s₁ u}.Finite) : FinConfig s₀ ≃ FinConfig s₁ :=
   Equiv.subtypeEquivRight fun _ =>
     ⟨finite_ne_of_finite_ne h, finite_ne_of_finite_ne (by simpa only [ne_comm] using h)⟩
@@ -426,9 +424,8 @@ theorem coe_finConfigEquiv (h : {u | s₀ u ≠ s₁ u}.Finite) (s : FinConfig s
 
 variable [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)]
 
-/-- L5, Section 7 (finding F2): for reference configurations differing at finitely many sites,
-the unitary `e_s ↦ e_s` (`transportUnitary_single`) intertwines the local embeddings,
-`W ι_X(m) W* = ι'_X(m)`. -/
+/-- For reference configurations differing at finitely many sites, the unitary `e_s ↦ e_s`
+(`transportUnitary_single`) intertwines the local embeddings, `W ι_X(m) W* = ι'_X(m)`. -/
 theorem conj_finConfigEquiv_localEmbed (h : {u | s₀ u ≠ s₁ u}.Finite) (X : Set Λ) [Fintype X]
     (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     (transportUnitary (finConfigEquiv h)).conjStarAlgEquiv (localEmbed s₀ X m) =
@@ -436,9 +433,9 @@ theorem conj_finConfigEquiv_localEmbed (h : {u | s₀ u ≠ s₁ u}.Finite) (X :
   rw [transport_localEmbed (finConfigEquiv h) (Equiv.refl _) (fun _ => rfl) (fun _ _ => rfl),
     Matrix.reindex_refl_refl]
 
-/-- L5, Section 7 (finding F2): for reference configurations differing at finitely many sites, the
-unitary `e_s ↦ e_s` carries `A(O)` onto `A'(O)` for every region; the two quasi-local nets are
-identified by the canonical unitary. -/
+/-- For reference configurations differing at finitely many sites, the unitary `e_s ↦ e_s` carries
+`A(O)` onto `A'(O)` for every region; the two quasi-local nets are identified by the canonical
+unitary. -/
 theorem isCovariancePair_finConfigEquiv (h : {u | s₀ u ≠ s₁ u}.Finite) :
     Net.IsCovariancePair (quasiLocalNet s₀) (quasiLocalNet s₁)
       (RegionIndex.Iso.refl (subsetIndex Λ))
@@ -454,9 +451,9 @@ section Reference
 
 variable {Λ : Type*} {σ : Λ → Type*} {s₀ s₀' : Config σ}
 
-/-- L5, Proposition 19: site-wise permutations `π_u` of the letters with `π_u(s₀ u) = s₀' u`
-give a bijection `(πs)(u) = π_u(s u)` of the configurations finitely supported for `s₀` onto those
-finitely supported for `s₀'`. -/
+/-- Site-wise permutations `π_u` of the letters with `π_u(s₀ u) = s₀' u` give a bijection
+`(πs)(u) = π_u(s u)` of the configurations finitely supported for `s₀` onto those finitely supported
+for `s₀'`. -/
 def letterPerm (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π u (s₀ u) = s₀' u) :
     FinConfig s₀ ≃ FinConfig s₀' where
   toFun s := ⟨fun u => π u (s.1 u), s.2.subset fun u hu h => hu (by simp only [h, hπ])⟩
@@ -470,12 +467,12 @@ theorem letterPerm_apply_coe (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π u (s�
     (s : FinConfig s₀) (u : Λ) : (letterPerm π hπ s).1 u = π u (s.1 u) :=
   rfl
 
-/-- L5, Proposition 19: the permutation `π_X` of the letters of `X`, `(π_X ξ)(x) = π_x(ξ x)`. -/
+/-- The permutation `π_X` of the letters of `X`, `(π_X ξ)(x) = π_x(ξ x)`. -/
 def letterPermLocal (π : ∀ u, σ u ≃ σ u) (X : Set Λ) : ((x : X) → σ x) ≃ ((x : X) → σ x) :=
   Equiv.piCongrRight fun x => π x
 
 /-- Site-wise permutations of the letters carrying `s₀` to `s₀'` exist, for instance the
-transpositions of `s₀ u` and `s₀' u` (L5, proof of Proposition 19). -/
+transpositions of `s₀ u` and `s₀' u`. -/
 theorem exists_letterPerm (s₀ s₀' : Config σ) :
     ∃ π : ∀ u, σ u ≃ σ u, ∀ u, π u (s₀ u) = s₀' u := by
   classical
@@ -483,7 +480,7 @@ theorem exists_letterPerm (s₀ s₀' : Config σ) :
 
 variable [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)]
 
-/-- L5, Proposition 19: the unitary `W e_s = e_{πs}` satisfies `W ι_X(m) W* = ι'_X(π_* m)`, where
+/-- The unitary `W e_s = e_{πs}` satisfies `W ι_X(m) W* = ι'_X(π_* m)`, where
 `π_* m = Matrix.reindex π_X π_X m`. -/
 theorem conj_letterPerm_localEmbed (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π u (s₀ u) = s₀' u)
     (X : Set Λ) [Fintype X] (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
@@ -495,7 +492,7 @@ theorem conj_letterPerm_localEmbed (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π 
   · simp [glue, hu, letterPermLocal]
   · simp [glue, hu]
 
-/-- L5, Proposition 19: `Ad W` is an isomorphism of the quasi-local nets for `s₀` and `s₀'`,
+/-- Conjugation by `W` is an isomorphism of the quasi-local nets for `s₀` and `s₀'`,
 `W A(O) W* = A'(O)`. -/
 theorem isCovariancePair_letterPerm (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π u (s₀ u) = s₀' u) :
     Net.IsCovariancePair (quasiLocalNet s₀) (quasiLocalNet s₀')
@@ -504,8 +501,8 @@ theorem isCovariancePair_letterPerm (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π
   isCovariancePair_of_localEmbed _ (letterPermLocal π) fun X _ m =>
     conj_letterPerm_localEmbed π hπ X m
 
-/-- L5, Proposition 19: `Ad W` restricts to an isomorphism of the nets in the quasi-local
-algebras for `s₀` and `s₀'`. -/
+/-- Conjugation by `W` restricts to an isomorphism of the nets in the quasi-local algebras for `s₀`
+and `s₀'`. -/
 theorem isCovariancePair_qlNet_letterPerm (π : ∀ u, σ u ≃ σ u) (hπ : ∀ u, π u (s₀ u) = s₀' u) :
     Net.IsCovariancePair (qlNet s₀) (qlNet s₀') (RegionIndex.Iso.refl (subsetIndex Λ))
       (restrictStarAlgEquiv (transportUnitary (letterPerm π hπ)).conjStarAlgEquiv
@@ -513,15 +510,14 @@ theorem isCovariancePair_qlNet_letterPerm (π : ∀ u, σ u ≃ σ u) (hπ : ∀
         (isCovariancePair_letterPerm π hπ Set.univ)) :=
   isCovariancePair_qlNet _ _ (isCovariancePair_letterPerm π hπ) _
 
-/-- L5, Proposition 19: the quasi-local nets of any two reference configurations are isomorphic
-(L1, Definition 4). -/
+/-- The quasi-local nets of any two reference configurations are isomorphic (`Net.Isomorphic`). -/
 theorem quasiLocalNet_isomorphic_of_ref (s₀ s₀' : Config σ) :
     Net.Isomorphic (subsetIndex Λ) (quasiLocalNet s₀) (quasiLocalNet s₀') := by
   obtain ⟨π, hπ⟩ := exists_letterPerm s₀ s₀'
   exact ⟨_, isCovariancePair_letterPerm π hπ⟩
 
-/-- L5, Proposition 19: the nets in the quasi-local algebras of any two reference configurations
-are isomorphic, through the restriction of `Ad W`. -/
+/-- The nets in the quasi-local algebras of any two reference configurations are isomorphic, through
+the restriction of `Ad W`. -/
 theorem qlNet_isomorphic_of_ref (s₀ s₀' : Config σ) :
     Net.Isomorphic (subsetIndex Λ) (qlNet s₀) (qlNet s₀') := by
   obtain ⟨π, hπ⟩ := exists_letterPerm s₀ s₀'

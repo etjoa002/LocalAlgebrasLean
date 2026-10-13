@@ -18,15 +18,10 @@ configuration is a choice of a letter at every site; the qudit algebra is the ma
 the configurations, a C*-algebra under the operator norm (Mathlib's scoped instances
 `Matrix.Norms.L2Operator`). The local algebra of a region `X` is the set of matrices that vanish
 between configurations differing off `X` and whose entries depend only on the parts of the
-configurations inside `X` (M2, Definition 2.3). It is the range of the embedding of the matrices
-on `X`; the local algebras form a net over the subsets of `Λ`, locally commutative for the
-region index of the sites (M2, Theorem 4.3).
-
-Moved from LocalityLean (milestone M2, Definition 2.3, Lemma 4.1, Propositions 4.2, Theorem
-4.3) in milestone L4 of this library (6 Oct 2026), so that every formalization of qudit
-lattices uses one definition. The alphabet may depend on the site, regions are arbitrary
-subsets, and the net is a `LocalAlgebrasLean.Net (Set Λ) _`, locally commutative for the
-region index of the sites. Imports only Mathlib and this library.
+configurations inside `X`. It is the range of the embedding of the matrices on `X`; the local
+algebras form a net `LocalAlgebrasLean.Net (Set Λ) _` over the subsets of `Λ`, locally
+commutative for the region index of the sites. The alphabet may depend on the site, and regions
+are arbitrary subsets.
 
 ## Main definitions
 
@@ -35,10 +30,8 @@ region index of the sites. Imports only Mathlib and this library.
 
 ## Main statements
 
-* `LocalAlgebrasLean.Qudit.sum_glue` (M2, Lemma 4.1), `localAlgebra_mono`, `embed_mem`,
-  `mem_localAlgebra_iff`, `localAlgebra_univ` (M2, Proposition 4.2),
-  `quditNet_isLocallyCommutative`
-  (M2, Theorem 4.3).
+* `LocalAlgebrasLean.Qudit.sum_glue`, `localAlgebra_mono`, `embed_mem`, `mem_localAlgebra_iff`,
+  `localAlgebra_univ`, `quditNet_isLocallyCommutative`.
 -/
 
 noncomputable section
@@ -138,8 +131,8 @@ theorem mix_agreesOff_right (X Y : Set Λ) (s s'' : Config σ) :
 /-- The qudit algebra: matrices indexed by configurations. -/
 abbrev QuditAlgebra (σ : Λ → Type*) := Matrix (Config σ) (Config σ) ℂ
 
-/-- M2, Definition 2.3: the two conditions of a matrix local to `X`: it vanishes between
-configurations differing off `X`, and its entries depend only on the parts inside `X`. -/
+/-- The two conditions of a matrix local to `X`: it vanishes between configurations differing off
+`X`, and its entries depend only on the parts inside `X`. -/
 def IsLocal (X : Set Λ) (M : QuditAlgebra σ) : Prop :=
   (∀ s s', ¬ AgreesOff X s s' → M s s' = 0) ∧
   (∀ s s' r r', AgreesOff X s s' → AgreesOff X r r' → restrict X s = restrict X r →
@@ -164,7 +157,7 @@ theorem IsLocal.star {X : Set Λ} {M : QuditAlgebra σ} (hM : IsLocal X M) :
    fun s s' r r' hs hr h1 h2 => by
      simp [Matrix.star_apply, hM.2 s' s r' r hs.symm hr.symm h2 h1]⟩
 
-/-- M2, Proposition 4.2 (c): a matrix local to `X` is local to every larger region. -/
+/-- A matrix local to `X` is local to every larger region. -/
 theorem IsLocal.mono {X Y : Set Λ} (hXY : X ⊆ Y) {M : QuditAlgebra σ} (hM : IsLocal X M) :
     IsLocal Y M := by
   constructor
@@ -221,8 +214,8 @@ section Sums
 variable [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)]
 
 open Classical in
-/-- M2, Lemma 4.1: a sum over configurations whose terms vanish off the class of `s` is the sum
-over the letters on `X`. -/
+/-- A sum over configurations whose terms vanish off the class of `s` is the sum over the letters on
+`X`. -/
 theorem sum_glue (X : Set Λ) (s : Config σ) (f : Config σ → ℂ)
     (hf : ∀ s', ¬ AgreesOff X s' s → f s' = 0) :
     ∑ s', f s' = ∑ ξ : (x : X) → σ x, f (glue X ξ s) := by
@@ -239,7 +232,7 @@ theorem sum_glue (X : Set Λ) (s : Config σ) (f : Config σ → ℂ)
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hs'
     rw [glue_restrict hs']
 
-/-- M2, Proposition 4.2 (a): local matrices are closed under products. -/
+/-- Local matrices are closed under products. -/
 theorem IsLocal.mul {X : Set Λ} {M N : QuditAlgebra σ} (hM : IsLocal X M) (hN : IsLocal X N) :
     IsLocal X (M * N) := by
   constructor
@@ -278,7 +271,7 @@ theorem mul_apply_eq_mix {X Y : Set Λ} (hXY : Disjoint X Y) {M N : QuditAlgebra
     · simp [hN.1 s' s'' h2]
   · simp [hM.1 s s' h1]
 
-/-- M2, Theorem 4.3: local matrices of disjoint regions commute. -/
+/-- Local matrices of disjoint regions commute. -/
 theorem commute_of_disjoint {X Y : Set Λ} (hXY : Disjoint X Y) {M N : QuditAlgebra σ}
     (hM : IsLocal X M) (hN : IsLocal Y N) : Commute M N := by
   change M * N = N * M
@@ -315,7 +308,7 @@ theorem embed_apply (X : Set Λ) (m : Matrix ((x : X) → σ x) ((x : X) → σ 
     (s s' : Config σ) :
     embed X m s s' = if AgreesOff X s s' then m (restrict X s) (restrict X s') else 0 := rfl
 
-/-- M2, Proposition 4.2 (b), first half: embedded matrices are local. -/
+/-- Embedded matrices are local. -/
 theorem isLocal_embed (X : Set Λ) (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     IsLocal X (embed X m) := by
   constructor
@@ -323,7 +316,7 @@ theorem isLocal_embed (X : Set Λ) (m : Matrix ((x : X) → σ x) ((x : X) → �
   · intro s s' r r' hs hr h1 h2
     simp [embed_apply, hs, hr, h1, h2]
 
-/-- M2, Proposition 4.2 (b): a matrix is local to `X` iff it is an embedded matrix on `X`. -/
+/-- A matrix is local to `X` iff it is an embedded matrix on `X`. -/
 theorem isLocal_iff_exists_embed [∀ u, Nonempty (σ u)] {X : Set Λ} {M : QuditAlgebra σ} :
     IsLocal X M ↔ ∃ m, M = embed X m := by
   constructor
@@ -367,11 +360,11 @@ theorem embed_mem (X : Set Λ) (m : Matrix ((x : X) → σ x) ((x : X) → σ x)
 theorem mem_localAlgebra_iff [∀ u, Nonempty (σ u)] {X : Set Λ} {M : QuditAlgebra σ} :
     M ∈ localAlgebra X ↔ ∃ m, M = embed X m := isLocal_iff_exists_embed
 
-/-- M2, Proposition 4.2 (c): isotony. -/
+/-- Isotony of the local algebras. -/
 theorem localAlgebra_mono {X Y : Set Λ} (hXY : X ⊆ Y) :
     localAlgebra (σ := σ) X ≤ localAlgebra Y := fun _ hM => IsLocal.mono hXY hM
 
-/-- M2, Proposition 4.2 (d): every matrix is local to the whole site set. -/
+/-- Every matrix is local to the whole site set. -/
 theorem localAlgebra_univ : localAlgebra (σ := σ) Set.univ = ⊤ := by
   refine top_le_iff.mp fun M _ => ⟨fun s s' h => absurd (agreesOff_univ s s') h, ?_⟩
   intro s s' r r' _ _ h1 h2
@@ -379,7 +372,7 @@ theorem localAlgebra_univ : localAlgebra (σ := σ) Set.univ = ⊤ := by
   have e2 : s' = r' := (eq_iff_restrict_eq (agreesOff_univ s' r')).2 h2
   rw [e1, e2]
 
-/-- The local algebra is closed (finite dimension); M2, Proposition 4.2 (a). -/
+/-- The local algebra is closed (finite dimension). -/
 theorem localAlgebra_isClosed (X : Set Λ) :
     IsClosed ((localAlgebra (σ := σ) X : StarSubalgebra ℂ (QuditAlgebra σ)) :
       Set (QuditAlgebra σ)) := by
@@ -396,8 +389,8 @@ def quditNet (σ : Λ → Type*) [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ
 
 theorem quditNet_apply (X : Set Λ) : quditNet σ X = localAlgebra X := rfl
 
-/-- M2, Theorem 4.3: the qudit net is locally commutative for the region index of the sites:
-local algebras of disjoint regions commute. -/
+/-- The qudit net is locally commutative for the region index of the sites: local algebras of
+disjoint regions commute. -/
 theorem quditNet_isLocallyCommutative :
     (quditNet σ).IsLocallyCommutative (subsetIndex Λ) :=
   fun _ _ hXY _ hM _ hN => commute_of_disjoint hXY hM hN

@@ -8,9 +8,9 @@ A quantum system with regions assigns to each region `O` an algebra `𝒜(O)` of
 measurable in `O`; larger regions carry larger algebras, and observables of separated regions
 commute. For a lattice of `d`-level systems (qudits), `𝒜(X)` is the matrix algebra of the sites in
 a finite region `X`, and the observables of the infinite lattice form the **quasi-local algebra**,
-the norm closure of the union of the local algebras. This library builds these objects once, so
-that work on quantum field theory, quantum cellular automata, propagation bounds and tensor
-networks can rest on one definition of each. It knows nothing of dynamics.
+the norm closure of the union of the local algebras. The library constructs these objects once,
+so that formalizations of quantum field theory, quantum cellular automata, propagation bounds and
+tensor networks share one definition of each.
 
 ## What is proved
 
@@ -22,8 +22,8 @@ networks can rest on one definition of each. It knows nothing of dynamics.
 | The quasi-local algebra | For a reference configuration `s₀`, the Hilbert space `ℓ²(F)` of the configurations differing from `s₀` at finitely many sites; the embedding of the matrices of a finite region, a unital, injective, isometric star homomorphism, compatible with `m ↦ m ⊗ 1`; the quasi-local net (closed, locally commutative) and the quasi-local algebra, in which the net is generating; agreement with the qudit net in finite volume; covariance under symmetries of the sites; independence of the reference configuration | `Qudit/QuasiLocal`, `QuasiLocalNet`, `QuasiLocalCov` |
 | Universal property | Every compatible family of unital star homomorphisms out of the local matrix algebras into a C*-algebra extends uniquely through the quasi-local algebra, isometrically when the target is nonzero; hence any construction with compatible embeddings of dense union (for instance the abstract inductive limit) is isomorphic to this one by a unique isomorphism | `Qudit/QuasiLocalUniversal` |
 
-Every proof is complete: there are no unfinished proofs, no axioms added, and no steps delegated to
-unchecked computation. The statements can be checked without reading any proof; see below.
+No proof is left unfinished, no axiom is added, and no step is delegated to unchecked computation.
+The statements can be checked without reading any proof (see Verification).
 
 ## Verification
 
@@ -45,13 +45,14 @@ lake comparator --config verify/comparator.json --paranoid
 checks that each theorem proved in `Solution.lean` has exactly the statement given in
 `Challenge.lean`, that the proofs use no axioms other than `propext`, `Classical.choice` and
 `Quot.sound`, and that Lean's kernel and four independently written proof checkers all accept
-the proofs. To accept the results it is therefore enough to read the 21 statements; the proofs
-need not be read. On Linux the command compiles the code in a sandbox; on other systems the option
-`--inadvisably-no-sandbox` is needed, and the compiled code then runs without that isolation. The scripts `verify/check_same_statements.py` and `verify/make_core_page.py --check`
-confirm, in a few seconds, that the two Lean files state the same theorems and that the page is
-generated from the current `Challenge.lean`.
+the proofs. To accept the results it is therefore enough to read the 21 statements. On Linux the
+command compiles the code in a sandbox; on other systems the option `--inadvisably-no-sandbox` is
+needed, and the compiled code then runs without that isolation. The scripts
+`verify/check_same_statements.py` and `verify/make_core_page.py --check` confirm, in a few
+seconds, that the two Lean files state the same theorems and that the page is generated from the
+current `Challenge.lean`.
 
-## How it works
+## The construction
 
 The quasi-local algebra is realized concretely on `ℓ²` of the finitely supported configurations,
 which is the representation of the product state of `s₀`. A matrix unit of a finite region acts
@@ -130,11 +131,11 @@ many sites give the same representation on `ℓ²`.
 
 ## Status
 
-This is a living library: it is developed further, and this repository is updated as the work
-progresses. Problem reports and suggestions are welcome; see `CONTRIBUTING.md`. Next: nets of
-graded algebras, in which odd observables of disjoint regions anticommute instead of commuting,
-as fermionic lattice systems require; and lecture notes giving the readable account of the
-library. Candidates for later theorems: the representations on `ℓ²` for reference configurations
+The library is under development, and this repository is updated as the work progresses. Problem
+reports and suggestions are welcome; see `CONTRIBUTING.md`. Planned next are nets of graded
+algebras, in which odd observables of disjoint regions anticommute, as fermionic lattice systems
+require, and lecture notes giving an account of the library in mathematical prose. Candidates for
+later theorems: the representations on `ℓ²` for reference configurations
 that differ at infinitely many sites are inequivalent (J. von Neumann, "On infinite direct
 products", Compositio Math. 6 (1939) 1–77); and on the infinite lattice the projection onto the
 reference state lies at distance `1/2` from the local algebra of every proper region.

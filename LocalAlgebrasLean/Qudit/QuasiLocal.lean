@@ -13,43 +13,44 @@ import Mathlib.Topology.Algebra.InfiniteSum.Real
 /-!
 # The local embeddings of an infinite lattice
 
-Milestone L5, Sections 1-3. Sites `Λ` carry finite nonempty alphabets
-`σ u`, and a reference configuration `s₀` is fixed. The finitely supported configurations are
-those differing from `s₀` at finitely many sites, and the Hilbert space is `ℓ²` of them
-(Mathlib's `lp` with exponent `2`). A matrix on the letters of a finite region `X` acts on this
-space by changing the letters on `X`; the matrix units act as partial permutations, and the
-resulting local embedding is an injective unital star homomorphism into the bounded operators,
-hence isometric. The local embeddings are compatible with the extension `m ↦ m ⊗ 1` of L4 (the
-embedding `embed` of the qudit algebra of a finite site set `Y`), and embeddings of disjoint
-regions commute.
+Sites `Λ` carry finite nonempty alphabets `σ u`, and a reference configuration `s₀` is fixed.
+The finitely supported configurations are those differing from `s₀` at finitely many sites, and
+the Hilbert space is `ℓ²` of them (Mathlib's `lp` with exponent `2`). A matrix on the letters of
+a finite region `X` acts on this space by changing the letters on `X`; the matrix units act as
+partial permutations, and the resulting local embedding is an injective unital star homomorphism
+into the bounded operators, hence isometric. The local embeddings are compatible with the
+extension `m ↦ m ⊗ 1` (the embedding `embed` of `Qudit/Config` into the qudit algebra of a
+finite site set `Y`), and embeddings of disjoint regions commute.
 
-A finite region is a `X : Set Λ` with an instance `[Fintype X]`, so that the regions are those of
-L4 (`Set Λ`) and the matrices on `X` are L4's `Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ`. The
-instance enters the type of `localEmbed s₀ X`, but not its values (`localEmbed_congr_fintype`).
-Families indexed by the finite regions, such as the compatible families of the universal property
-(L5, Section 8), are indexed by `Finset Λ`, coerced to `Set Λ` with its canonical instance
-(`IsCompatibleFamily`).
+A finite region is a set `X : Set Λ` with an instance `[Fintype X]`, so that the regions are
+those of the qudit net (`Set Λ`) and the matrices on `X` are the
+`Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ` of `Qudit/Config`. The instance enters the type of
+`localEmbed s₀ X`, but not its values (`localEmbed_congr_fintype`). Families indexed by the
+finite regions, such as the compatible families of the universal property, are indexed by
+`Finset Λ`, coerced to `Set Λ` with its canonical instance (`IsCompatibleFamily`).
 
 ## Main definitions
 
-* `LocalAlgebrasLean.Qudit.FinConfig`, `ConfigSpace` (L5, Definition 3), `glueFin`.
-* `LocalAlgebrasLean.Qudit.pullL` (L5, Lemma 5), `unitOp` and `localEmbed` (L5, Definition 6).
-* `LocalAlgebrasLean.Qudit.extendLinear`, `extendHom`: the extension `m ↦ m ⊗ 1` (L5,
-  Definition 1 and Proposition 9), L4's `embed` on the site set `Y`.
+* `LocalAlgebrasLean.Qudit.FinConfig`, `ConfigSpace`, `glueFin`.
+* `LocalAlgebrasLean.Qudit.pullL` (partial permutations), `unitOp` (matrix units) and
+  `localEmbed`.
+* `LocalAlgebrasLean.Qudit.extendLinear`, `extendHom`: the extension `m ↦ m ⊗ 1`, which is
+  `embed` on the site set `Y`.
 * `LocalAlgebrasLean.Qudit.IsCompatibleFamily`: compatibility `β_Y(m ⊗ 1) = β_X(m)` of a family
-  over `Finset Λ`, stated with `extendLinear` (L5, Proposition 9 and Section 8).
+  over `Finset Λ`, stated with `extendLinear`.
 
 ## Main statements
 
-* `opNorm_pullL_le`, `norm_unitOp_le` (L5, Lemma 5), for `f : ι → κ` between two index
-  types.
-* `localEmbed_apply`, `localEmbed_single`, `inner_localEmbed` (L5, equations (1) and (2)).
-* `unitOp_mul`, `star_unitOp`, `sum_unitOp` (L5, Lemma 7).
-* `localEmbed_injective`, `norm_localEmbed`, `isometry_localEmbed`, `localEmbed_empty`
-  (L5, Proposition 8); `localEmbed_congr_fintype`.
+* `opNorm_pullL_le`, `norm_unitOp_le`: the partial permutations, for `f : ι → κ` between two
+  index types, and the matrix units have norm at most one.
+* `localEmbed_apply`, `localEmbed_single`, `inner_localEmbed`: the action and the matrix
+  elements of the local embedding.
+* `unitOp_mul`, `star_unitOp`, `sum_unitOp`: the relations of the matrix units.
+* `localEmbed_injective`, `norm_localEmbed`, `isometry_localEmbed`, `localEmbed_empty`,
+  `localEmbed_congr_fintype`.
 * `localEmbed_embed`, `range_localEmbed_mono`, `extendHom_injective`,
-  `isCompatibleFamily_localEmbed` (L5, Proposition 9).
-* `commute_localEmbed_of_disjoint` (L5, Proposition 10).
+  `isCompatibleFamily_localEmbed`: compatibility with `m ↦ m ⊗ 1`.
+* `commute_localEmbed_of_disjoint`: commutation for disjoint regions.
 -/
 
 open scoped ENNReal InnerProductSpace ComplexConjugate
@@ -111,8 +112,8 @@ private theorem norm_pull_le (S : Set ι) (f : ι → κ) (hf : Set.InjOn f S)
   rw [lp.norm_rpow_eq_tsum hp ψ]
   simpa [pull_apply] using tsum_pull_le S f hf ψ
 
-/-- L5, Lemma 5 (partial permutations): the bounded operator `ψ ↦ 1_S · (ψ ∘ f)` from `ℓ²(κ)` to
-`ℓ²(ι)`, for `f : ι → κ` injective on `S`. -/
+/-- The partial permutation: the bounded operator `ψ ↦ 1_S · (ψ ∘ f)` from `ℓ²(κ)` to `ℓ²(ι)`, for
+`f : ι → κ` injective on `S`. -/
 def pullL (S : Set ι) (f : ι → κ) (hf : Set.InjOn f S) :
     lp (fun _ : κ => ℂ) 2 →L[ℂ] lp (fun _ : ι => ℂ) 2 :=
   LinearMap.mkContinuous
@@ -126,8 +127,7 @@ def pullL (S : Set ι) (f : ι → κ) (hf : Set.InjOn f S) :
 theorem pullL_apply (S : Set ι) (f : ι → κ) (hf : Set.InjOn f S) (ψ : lp (fun _ : κ => ℂ) 2)
     (i : ι) : (pullL S f hf ψ : ι → ℂ) i = S.indicator (fun i => ψ (f i)) i := rfl
 
-/-- L5, Lemma 5 (partial permutations): the operator `ψ ↦ 1_S · (ψ ∘ f)` has norm at most
-one. -/
+/-- The partial permutation `ψ ↦ 1_S · (ψ ∘ f)` has norm at most one. -/
 theorem opNorm_pullL_le (S : Set ι) (f : ι → κ) (hf : Set.InjOn f S) : ‖pullL S f hf‖ ≤ 1 :=
   LinearMap.mkContinuous_norm_le _ zero_le_one _
 
@@ -192,11 +192,11 @@ section Space
 
 variable {Λ : Type*} {σ : Λ → Type*}
 
-/-- L5, Definition 3: the finitely supported configurations, those differing from the reference
-configuration `s₀` at finitely many sites. -/
+/-- The finitely supported configurations, those differing from the reference configuration `s₀` at
+finitely many sites. -/
 abbrev FinConfig (s₀ : Config σ) := {s : Config σ // {u | s u ≠ s₀ u}.Finite}
 
-/-- L5, Definition 3: the Hilbert space `H = ℓ²(F)` of the finitely supported configurations. -/
+/-- The Hilbert space `H = ℓ²(F)` of the finitely supported configurations. -/
 abbrev ConfigSpace (s₀ : Config σ) := lp (fun _ : FinConfig s₀ => ℂ) 2
 
 variable {s₀ : Config σ}
@@ -204,8 +204,8 @@ variable {s₀ : Config σ}
 /-- The reference configuration is finitely supported. -/
 def refFin (s₀ : Config σ) : FinConfig s₀ := ⟨s₀, by simp⟩
 
-/-- L5, after Definition 3: changing a finitely supported configuration on a finite region gives a
-finitely supported configuration. -/
+/-- Changing a finitely supported configuration on a finite region gives a finitely supported
+configuration. -/
 theorem glue_mem {X : Set Λ} (hX : X.Finite) (ξ : (x : X) → σ x) (s : FinConfig s₀) :
     {u | glue X ξ s.1 u ≠ s₀ u}.Finite := by
   refine (s.2.union hX).subset fun u hu => ?_
@@ -254,8 +254,8 @@ section Units
 
 variable {Λ : Type*} {σ : Λ → Type*} (s₀ : Config σ) (X : Set Λ) [Finite X]
 
-/-- L5, Definition 6: the matrix unit `T^X_{ξη}`, `(T^X_{ξη} ψ)(s) = δ_{s_X, ξ} ψ(η s_{Xᶜ})`, a
-partial permutation of the finitely supported configurations (L5, Lemma 5). -/
+/-- The matrix unit `T^X_{ξη}`, `(T^X_{ξη} ψ)(s) = δ_{s_X, ξ} ψ(η s_{Xᶜ})`, a partial permutation of
+the finitely supported configurations. -/
 def unitOp (ξ η : (x : X) → σ x) : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀ :=
   pullL {s | restrict X s.1 = ξ} (glueFin X η) (injOn_glueFin X ξ η)
 
@@ -273,12 +273,11 @@ theorem unitOp_apply [∀ u, DecidableEq (σ u)] [Fintype X] (ξ η : (x : X) �
   rw [unitOp_apply_eq_indicator, Set.indicator_apply]
   simp
 
-/-- L5, Definition 6 and Lemma 5: the matrix units have norm at most one. -/
+/-- The matrix units have norm at most one. -/
 theorem norm_unitOp_le (ξ η : (x : X) → σ x) : ‖unitOp s₀ X ξ η‖ ≤ 1 :=
   opNorm_pullL_le _ _ _
 
-/-- L5, Lemma 7 (matrix units), first relation:
-`T^X_{ξη} T^X_{ξ₁η₁} = δ_{η,ξ₁} T^X_{ξη₁}`. -/
+/-- The first relation of the matrix units: `T^X_{ξη} T^X_{ξ₁η₁} = δ_{η,ξ₁} T^X_{ξη₁}`. -/
 theorem unitOp_mul [∀ u, DecidableEq (σ u)] [Fintype X] (ξ η ξ₁ η₁ : (x : X) → σ x) :
     unitOp s₀ X ξ η * unitOp s₀ X ξ₁ η₁ = if η = ξ₁ then unitOp s₀ X ξ η₁ else 0 := by
   refine ContinuousLinearMap.ext fun ψ => lp.ext (funext fun s => ?_)
@@ -286,7 +285,7 @@ theorem unitOp_mul [∀ u, DecidableEq (σ u)] [Fintype X] (ξ η ξ₁ η₁ : 
   split_ifs with h1 h2 h2 <;> simp_all [unitOp_apply]
 
 /-- The bijection `s ↦ η s_{Xᶜ}` from the configurations with letters `ξ` on `X` to those with
-letters `η`, used in the proof of L5, Lemma 7. -/
+letters `η`, used in the proof of `star_unitOp`. -/
 private def unitEquiv (ξ η : (x : X) → σ x) :
     {s : FinConfig s₀ // s ∈ {s : FinConfig s₀ | restrict X s.1 = ξ}} ≃
       {t : FinConfig s₀ // t ∈ {t : FinConfig s₀ | restrict X t.1 = η}} where
@@ -299,7 +298,7 @@ private def unitEquiv (ξ η : (x : X) → σ x) :
     change glueFin X η (glueFin X ξ t.1) = t.1
     rw [glueFin_glueFin, glueFin_of_restrict_eq t.2])
 
-/-- L5, Lemma 7 (matrix units), second relation: `(T^X_{ξη})^* = T^X_{ηξ}`. -/
+/-- The second relation of the matrix units: `(T^X_{ξη})^* = T^X_{ηξ}`. -/
 theorem star_unitOp (ξ η : (x : X) → σ x) :
     star (unitOp s₀ X ξ η) = unitOp s₀ X η ξ := by
   rw [ContinuousLinearMap.star_eq_adjoint, eq_comm, ContinuousLinearMap.eq_adjoint_iff]
@@ -335,7 +334,7 @@ variable {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀ u, Fintype (σ u
   (X : Set Λ) [Fintype X]
 
 variable {s₀ X} in
-/-- L5, Lemma 7 (matrix units), third relation: `∑_ξ T^X_{ξξ} = 1`. -/
+/-- The third relation of the matrix units: `∑_ξ T^X_{ξξ} = 1`. -/
 theorem sum_unitOp : ∑ ξ : (x : X) → σ x, unitOp s₀ X ξ ξ = 1 := by
   classical
   refine ContinuousLinearMap.ext fun ψ => lp.ext (funext fun s => ?_)
@@ -343,7 +342,7 @@ theorem sum_unitOp : ∑ ξ : (x : X) → σ x, unitOp s₀ X ξ ξ = 1 := by
   simp only [unitOp_apply, Finset.sum_ite_eq, Finset.mem_univ, ite_true, glueFin_restrict_self,
     one_apply_eq_self]
 
-/-- The local embedding as a linear map, `m ↦ ∑_{ξ,η} m(ξ, η) T^X_{ξη}` (L5, Definition 6). -/
+/-- The local embedding as a linear map, `m ↦ ∑_{ξ,η} m(ξ, η) T^X_{ξη}`. -/
 private def localEmbedLinear :
     Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ →ₗ[ℂ] (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) where
   toFun m := ∑ ξ, ∑ η, m ξ η • unitOp s₀ X ξ η
@@ -384,10 +383,9 @@ variable [∀ u, DecidableEq (σ u)]
 
 variable (s₀ X)
 
-/-- L5, Definition 6 and Proposition 8: the local embedding
-`ι_X(m) = ∑_{ξ,η} m(ξ, η) T^X_{ξη}`, a unital star homomorphism from the matrices on the letters
-of the finite region `X` to the bounded operators on `ℓ²` of the finitely supported
-configurations. -/
+/-- The local embedding `ι_X(m) = ∑_{ξ,η} m(ξ, η) T^X_{ξη}`, a unital star homomorphism from the
+matrices on the letters of the finite region `X` to the bounded operators on `ℓ²` of the finitely
+supported configurations. -/
 def localEmbed :
     Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ →⋆ₐ[ℂ] (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) :=
   { AlgHom.ofLinearMap (localEmbedLinear s₀ X) localEmbedLinear_one localEmbedLinear_mul with
@@ -398,7 +396,7 @@ variable {s₀ X}
 theorem localEmbed_eq_sum (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     localEmbed s₀ X m = ∑ ξ, ∑ η, m ξ η • unitOp s₀ X ξ η := rfl
 
-/-- L5, equation (1): `(ι_X(m) ψ)(s) = ∑_η m(s_X, η) ψ(η s_{Xᶜ})`. -/
+/-- The action of the local embedding: `(ι_X(m) ψ)(s) = ∑_η m(s_X, η) ψ(η s_{Xᶜ})`. -/
 theorem localEmbed_apply (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) (ψ : ConfigSpace s₀)
     (s : FinConfig s₀) :
     (localEmbed s₀ X m ψ) s = ∑ η, m (restrict X s.1) η * ψ (glueFin X η s) := by
@@ -408,7 +406,7 @@ theorem localEmbed_apply (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) 
   simp
 
 open Classical in
-/-- The entries of the local embedding on basis vectors, L5, equation (2). -/
+/-- The entries of the local embedding on basis vectors. -/
 theorem localEmbed_single_apply (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ)
     (s t : FinConfig s₀) :
     (localEmbed s₀ X m (lp.single 2 t 1)) s =
@@ -427,7 +425,8 @@ theorem localEmbed_single_apply (m : Matrix ((x : X) → σ x) ((x : X) → σ x
     simp [this]
 
 open Classical in
-/-- L5, equation (1), second form: `ι_X(m) e_t = ∑_ξ m(ξ, t_X) e_{ξ t_{Xᶜ}}`. -/
+/-- The action of the local embedding on basis vectors:
+`ι_X(m) e_t = ∑_ξ m(ξ, t_X) e_{ξ t_{Xᶜ}}`. -/
 theorem localEmbed_single (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) (t : FinConfig s₀) :
     localEmbed s₀ X m (lp.single 2 t 1) =
       ∑ ξ, m ξ (restrict X t.1) • lp.single 2 (glueFin X ξ t) 1 := by
@@ -446,7 +445,8 @@ theorem localEmbed_single (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ)
     simp [this]
 
 open Classical in
-/-- L5, equation (2): `⟨e_s, ι_X(m) e_t⟩ = m(s_X, t_X)` if `s ∼_X t`, and `0` otherwise. -/
+/-- The matrix elements of the local embedding: `⟨e_s, ι_X(m) e_t⟩ = m(s_X, t_X)` if `s ∼_X t`, and
+`0` otherwise. -/
 theorem inner_localEmbed (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) (s t : FinConfig s₀) :
     ⟪lp.single 2 s (1 : ℂ), localEmbed s₀ X m (lp.single 2 t 1)⟫_ℂ =
       if AgreesOff X s.1 t.1 then m (restrict X s.1) (restrict X t.1) else 0 := by
@@ -456,16 +456,16 @@ theorem inner_localEmbed (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) 
 variable (s₀ X)
 
 omit [Fintype X] in
-/-- The values of the local embedding (L5, Definition 6) do not depend on the instance
-`Fintype X`. The two maps have different types, since the algebra structure of `M_X` is formed
-with the instance, but they agree on every matrix. -/
+/-- The values of the local embedding do not depend on the instance `Fintype X`. The two maps have
+different types, since the algebra structure of `M_X` is formed with the instance, but they agree on
+every matrix. -/
 theorem localEmbed_congr_fintype (i j : Fintype X)
     (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     @localEmbed Λ σ _ _ s₀ X i _ m = @localEmbed Λ σ _ _ s₀ X j _ m := by
   obtain rfl := Subsingleton.elim i j
   rfl
 
-/-- L5, Proposition 8: the local embedding is injective. -/
+/-- The local embedding is injective. -/
 theorem localEmbed_injective : Function.Injective (localEmbed s₀ X) := by
   intro m n h
   ext ξ η
@@ -477,19 +477,19 @@ theorem localEmbed_injective : Function.Injective (localEmbed s₀ X) := by
   simpa only [inner_localEmbed, hag, ite_true, restrict_glueFin] using key
 
 open scoped Matrix.Norms.L2Operator in
-/-- L5, Proposition 8: the local embedding is isometric for the operator norm of the matrices,
-`‖ι_X(m)‖ = ‖m‖` (an injective star homomorphism of C*-algebras is isometric). -/
+/-- The local embedding is isometric for the operator norm of the matrices, `‖ι_X(m)‖ = ‖m‖` (an
+injective star homomorphism of C*-algebras is isometric). -/
 theorem norm_localEmbed (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     ‖localEmbed s₀ X m‖ = ‖m‖ :=
   NonUnitalStarAlgHom.norm_map (localEmbed s₀ X) (localEmbed_injective s₀ X) m
 
 open scoped Matrix.Norms.L2Operator in
-/-- L5, Proposition 8: the local embedding is an isometry. -/
+/-- The local embedding is an isometry. -/
 theorem isometry_localEmbed : Isometry (localEmbed s₀ X) :=
   NonUnitalStarAlgHom.isometry (localEmbed s₀ X) (localEmbed_injective s₀ X)
 
 omit [Fintype X] in
-/-- L5, Proposition 8: on the empty region, `σ_∅` has one element and `ι_∅(c) = c 1`. -/
+/-- On the empty region, `σ_∅` has one element and `ι_∅(c) = c 1`. -/
 theorem localEmbed_empty (m : Matrix ((x : (∅ : Set Λ)) → σ x) ((x : (∅ : Set Λ)) → σ x) ℂ) :
     localEmbed s₀ (∅ : Set Λ) m = m default default • 1 := by
   have hm : m = m default default • (1 : Matrix _ _ ℂ) := by
@@ -507,9 +507,8 @@ section Compat
 
 variable {Λ : Type*} {σ : Λ → Type*} {X Y : Set Λ}
 
-/-- L5, Definition 1: the extension `m ⊗ 1` of a matrix on `X` to the region `Y ⊇ X`, as a linear
-map. It is L4's `embed` on the site set `Y` of the matrix `m` on the subregion
-`{y : Y | ↑y ∈ X}`. -/
+/-- The extension `m ⊗ 1` of a matrix on `X` to the region `Y ⊇ X`, as a linear map. It is `embed`
+on the site set `Y` of the matrix `m` on the subregion `{y : Y | ↑y ∈ X}`. -/
 def extendLinear (hXY : X ⊆ Y) :
     Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ →ₗ[ℂ] QuditAlgebra (fun y : Y => σ y) where
   toFun m := embed (Subtype.val ⁻¹' X) (Matrix.reindex (letterEquiv hXY) (letterEquiv hXY) m)
@@ -528,11 +527,10 @@ section Family
 
 variable [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)]
 
-/-- L5, Proposition 9 and Section 8: a family of unital star homomorphisms `β_X` from the matrix
-algebras of the finite regions into an algebra `B` is compatible if `β_Y(m ⊗ 1) = β_X(m)` for
-`X ⊆ Y`. The finite regions are indexed by `Finset Λ`, whose coercion to `Set Λ` carries a
-canonical instance `Fintype`, and the extension `m ⊗ 1` is `extendLinear`, so that no instance
-`Nonempty (σ u)` is needed. -/
+/-- A family of unital star homomorphisms `β_X` from the matrix algebras of the finite regions into
+an algebra `B` is compatible if `β_Y(m ⊗ 1) = β_X(m)` for `X ⊆ Y`. The finite regions are indexed by
+`Finset Λ`, whose coercion to `Set Λ` carries a canonical instance `Fintype`, and the extension
+`m ⊗ 1` is `extendLinear`, so that no instance `Nonempty (σ u)` is needed. -/
 def IsCompatibleFamily {B : Type*} [Semiring B] [Algebra ℂ B] [Star B]
     (β : ∀ X : Finset Λ,
       Matrix ((x : (X : Set Λ)) → σ x) ((x : (X : Set Λ)) → σ x) ℂ →⋆ₐ[ℂ] B) : Prop :=
@@ -544,8 +542,8 @@ end Family
 
 variable [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] [Fintype X] [Fintype Y]
 
-/-- L5, Proposition 9 (compatibility): `ι_Y(m ⊗ 1) = ι_X(m)` for finite `X ⊆ Y`, where `m ⊗ 1` is
-L4's `embed` on the site set `Y`. -/
+/-- Compatibility: `ι_Y(m ⊗ 1) = ι_X(m)` for finite `X ⊆ Y`, where `m ⊗ 1` is `embed` on the site
+set `Y`. -/
 theorem localEmbed_embed (s₀ : Config σ) (hXY : X ⊆ Y)
     (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
     localEmbed s₀ Y (embed (Subtype.val ⁻¹' X)
@@ -567,24 +565,24 @@ theorem localEmbed_extendLinear (s₀ : Config σ) (hXY : X ⊆ Y)
     localEmbed s₀ Y (extendLinear hXY m) = localEmbed s₀ X m :=
   localEmbed_embed s₀ hXY m
 
-/-- L5, Proposition 9: `ι_X(M_X) ⊆ ι_Y(M_Y)` for finite `X ⊆ Y`. -/
+/-- Isotony of the ranges: `ι_X(M_X) ⊆ ι_Y(M_Y)` for finite `X ⊆ Y`. -/
 theorem range_localEmbed_mono (s₀ : Config σ) (hXY : X ⊆ Y) :
     Set.range (localEmbed s₀ X) ⊆ Set.range (localEmbed s₀ Y) := by
   rintro _ ⟨m, rfl⟩
   exact ⟨_, localEmbed_embed s₀ hXY m⟩
 
 omit [Fintype X] [Fintype Y] in
-/-- L5, Proposition 9: the local embeddings form a compatible family over the finite regions. -/
+/-- The local embeddings form a compatible family over the finite regions. -/
 theorem isCompatibleFamily_localEmbed (s₀ : Config σ) :
     IsCompatibleFamily (fun X : Finset Λ => localEmbed s₀ (X : Set Λ)) :=
   fun _ _ h m => localEmbed_extendLinear s₀ (Finset.coe_subset.2 h) m
 
 variable [∀ u, Nonempty (σ u)]
 
-/-- L5, Definition 1 and Proposition 9: the extension `m ↦ m ⊗ 1` from the matrices on `X` to
-the qudit algebra of the finite site set `Y ⊇ X` (L4's `embed`) is a unital star homomorphism.
-The proof transports the relations through the injective local embedding of `Y`, for which a
-reference configuration exists because the alphabets are nonempty. -/
+/-- The extension `m ↦ m ⊗ 1` from the matrices on `X` to the qudit algebra of the finite site set
+`Y ⊇ X` (`embed`) is a unital star homomorphism. The proof transports the relations through the
+injective local embedding of `Y`, for which a reference configuration exists because the alphabets
+are nonempty. -/
 def extendHom (hXY : X ⊆ Y) :
     Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ →⋆ₐ[ℂ] QuditAlgebra (fun y : Y => σ y) :=
   let s₀ : Config σ := fun u => Classical.arbitrary (σ u)
@@ -603,7 +601,7 @@ theorem extendHom_apply (hXY : X ⊆ Y) (m : Matrix ((x : X) → σ x) ((x : X) 
     extendHom hXY m =
       embed (Subtype.val ⁻¹' X) (Matrix.reindex (letterEquiv hXY) (letterEquiv hXY) m) := rfl
 
-/-- L5, Proposition 9: the extension `m ↦ m ⊗ 1` is injective. -/
+/-- The extension `m ↦ m ⊗ 1` is injective. -/
 theorem extendHom_injective (hXY : X ⊆ Y) : Function.Injective (extendHom (σ := σ) hXY) := by
   intro m n h
   let s₀ : Config σ := fun u => Classical.arbitrary (σ u)
@@ -618,7 +616,7 @@ section Commute
 variable {Λ : Type*} {σ : Λ → Type*} [DecidableEq Λ] [∀ u, Fintype (σ u)]
   [∀ u, DecidableEq (σ u)] {X Y : Set Λ} [Fintype X] [Fintype Y]
 
-/-- L5, Proposition 10 (commutation): the local embeddings of disjoint finite regions commute. -/
+/-- The local embeddings of disjoint finite regions commute. -/
 theorem commute_localEmbed_of_disjoint (s₀ : Config σ) (hXY : Disjoint X Y)
     (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ)
     (n : Matrix ((y : Y) → σ y) ((y : Y) → σ y) ℂ) :
