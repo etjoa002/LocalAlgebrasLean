@@ -68,7 +68,7 @@ only if every checker accepts it. The judge takes as given what `Challenge.lean`
 own library, Mathlib, and the five definitions of this library on which the statements depend,
 which is why the statements include descriptions of those five definitions in Mathlib's terms.
 
-## The construction
+## Methods of proof
 
 The quasi-local algebra is realized concretely on `ℓ²` of the finitely supported configurations,
 which is the representation of the product state of `s₀`. A matrix unit of a finite region acts

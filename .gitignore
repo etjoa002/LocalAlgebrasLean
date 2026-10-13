@@ -4,8 +4,9 @@
 __pycache__/
 *.pyc
 docs/*/*.aux
+docs/*/*.fdb_latexmk
+docs/*/*.fls
 docs/*/*.log
 docs/*/*.out
+docs/*/*.synctex.gz
 docs/*/*.toc
-docs/*/*.fls
-docs/*/*.fdb_latexmk
