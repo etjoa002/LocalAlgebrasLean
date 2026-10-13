@@ -1,0 +1,49 @@
+# Runs on GitHub's Linux machines at every change: builds the library and judges it with
+# `lake comparator` inside its sandbox, with Lean's kernel and the four independent checkers.
+# What it fetches: GitHub's own checkout step (pinned to a commit), Lean's official installer
+# (elan, from github.com/leanprover/elan), the Lean version named in `lean-toolchain`, and the
+# precompiled Mathlib named in `lake-manifest.json`; the sandbox tool bubblewrap from Ubuntu.
+name: Comparator
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  judge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+
+      - name: Install Lean (elan)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
+          sh elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch the precompiled Mathlib
+        run: lake exe cache get
+
+      - name: Build the library and the statement files
+        run: lake build LocalAlgebrasLean Challenge Solution
+
+      - name: Check that the two statement files and the page agree
+        run: |
+          python3 verify/check_same_statements.py
+          python3 verify/make_core_page.py --check
+
+      - name: Install the sandbox (bubblewrap)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          # Ubuntu 24.04 restricts unprivileged user namespaces, which bubblewrap needs.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Judge with lake comparator (sandboxed, all checkers)
+        run: lake comparator --config verify/comparator.json --paranoid
