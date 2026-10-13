@@ -1,6 +1,6 @@
 # The sealed statements
 
-Generated from `verify/Challenge.lean` by `verify/make_core_page.py`: the 21 statements that `lake comparator` checks (see the front page, "Check it yourself"). Each entry gives the statement in words and the name of its formal version in `Challenge.lean`.
+Generated from `verify/Challenge.lean` by `verify/make_core_page.py`: the 21 statements that `lake comparator` checks (see the section "Verification" of the front page). Each entry gives the statement in words and the name of its formal version in `Challenge.lean`.
 
 ## Setting
 

@@ -25,31 +25,32 @@ networks can rest on one definition of each. It knows nothing of dynamics.
 Every proof is complete: there are no unfinished proofs, no axioms added, and no steps delegated to
 unchecked computation. The statements can be checked without reading any proof; see below.
 
-## Check it yourself
+## Verification
 
-The meaning of a theorem depends only on its statement and on the definitions the statement uses;
-proofs and intermediate lemmas affect only whether it is true. The library is therefore summarized
-by 21 statements, on one page: [`verify/CORE.md`](verify/CORE.md) (also `verify/core.pdf`). They are
-the headline theorems, stated as far as possible in Mathlib's own vocabulary; three
-characterizations that pin down, in Mathlib's terms, the five definitions of this library they use;
-and five concrete instances showing that their hypotheses can be met and their objects are not
-degenerate. The page is generated from `verify/Challenge.lean`, which states the same 21 theorems
-in Lean without proofs (`python verify/make_core_page.py --check` confirms that the page matches the
-file). `verify/Solution.lean` repeats each statement with the identical text and proves it from the
-library. The judge `lake comparator`, part of Lean, settles the rest mechanically: each named
-theorem has exactly the same statement in both files, as a fully elaborated term; the proofs use
-only the three standard axioms of Lean's logic (`propext`, `Classical.choice`, `Quot.sound`); and
-Lean's kernel, together with four independently written checkers, accepts every proof. What a
-reader still has to judge is the one page; the proofs, the lemmas and the rest of the library
-need not be read or trusted:
+The content of the library is stated in 21 theorems, listed in [`verify/CORE.md`](verify/CORE.md)
+(also `verify/core.pdf`). Eleven of them are the main results above. Five describe, in terms of
+Mathlib's definitions, the five definitions of this library on which the main results depend. The
+other five are examples on the chains `ℕ` and `ℤ` with two letters per site, in which the
+hypotheses of the main results hold and the algebras are not trivial. Since a statement depends
+only on the definitions it involves, these 21 statements determine what the library asserts.
+
+The file `verify/Challenge.lean` states the same 21 theorems in Lean without proofs, and
+`verify/core.pdf` is generated from it; `verify/Solution.lean` proves them from the library. The
+command
 
 ```
 lake comparator --config verify/comparator.json --paranoid
 ```
 
-On Linux the judge builds the code in a sandbox, which it needs to be fully trustworthy; on other
-systems add `--inadvisably-no-sandbox`. `python verify/check_same_statements.py` checks the same
-correspondence on the text of the two files, in a second.
+checks that each theorem proved in `Solution.lean` has exactly the statement given in
+`Challenge.lean`, that the proofs use no axioms other than `propext`, `Classical.choice` and
+`Quot.sound`, and that Lean's kernel and four independently written proof checkers all accept
+the proofs. To accept the results it is therefore enough to read the 21 statements; the proofs
+need not be read. On Linux the command compiles the code in a sandbox; on other systems the option
+`--inadvisably-no-sandbox` is needed, and the check is then weaker in that the compiled code is
+not isolated. The scripts `verify/check_same_statements.py` and `verify/make_core_page.py --check`
+confirm, in a few seconds, that the two Lean files state the same theorems and that the page is
+generated from the current `Challenge.lean`.
 
 ## How it works
 
@@ -102,7 +103,7 @@ git clone https://github.com/etjoa002/LocalAlgebrasLean
 cd LocalAlgebrasLean
 lake exe cache get          # download the precompiled Mathlib
 lake build LocalAlgebrasLean
-lake comparator --config verify/comparator.json --paranoid   # see "Check it yourself"
+lake comparator --config verify/comparator.json --paranoid   # see "Verification"
 ```
 
 ## Numerical checks
