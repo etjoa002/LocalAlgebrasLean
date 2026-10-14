@@ -11,59 +11,59 @@ These 21 statements are the ones that \texttt{lake comparator} checks. Each is f
 \section*{Setting}
 There are sites $\Lambda$, a finite alphabet $\sigma_u$ at every site $u$, and a reference configuration $s_0$ choosing a letter at every site (so every alphabet is nonempty). For a finite set of sites $X$, a matrix on the letters of $X$ is a complex matrix indexed by the assignments $\xi$ of a letter $\xi_x \in \sigma_x$ to each $x \in X$, that is, an operator on $\bigotimes_{x \in X} \mathbb C^{\sigma_x}$. Bounded operators carry the operator norm, and C$^*$-algebras are complex.
 
-\paragraph{1.} The finitely supported configurations are the configurations $s$ that differ from the reference configuration $s_0$ at finitely many sites.\\{\footnotesize\texttt{Sealed.finConfig\_def}}
+\paragraph{1.} The finitely supported configurations are the configurations $s$ that differ from the reference configuration $s_0$ at finitely many sites.\par{\footnotesize\texttt{Sealed.finConfig\_def}}
 
-\paragraph{2.} The Hilbert space $H$ is $\ell^2(F)$, the square-summable complex functions on the set $F$ of finitely supported configurations.\\{\footnotesize\texttt{Sealed.configSpace\_def}}
+\paragraph{2.} The Hilbert space $H$ is $\ell^2(F)$, the square-summable complex functions on the set $F$ of finitely supported configurations.\par{\footnotesize\texttt{Sealed.configSpace\_def}}
 
 \section*{The local embeddings}
 For a finite set of sites $X$, the local embedding $\iota_X$ is a unital $*$-homomorphism from the matrices on the letters of $X$; this is part of the type of $\iota_X$ in the Lean statements. Statement 3 determines $\iota_X$ by its matrix elements.
 
-\paragraph{3.} For a finite set of sites $X$, a matrix $m$ on the letters of $X$ and finitely supported configurations $s, t$, the matrix element $\langle e_s, \iota_X(m) e_t\rangle$ in the standard basis of $\ell^2(F)$ is $m(s|_X, t|_X)$ if $s$ and $t$ agree at every site outside $X$, and $0$ otherwise.\\{\footnotesize\texttt{Sealed.inner\_localEmbed}}
+\paragraph{3.} For a finite set of sites $X$, a matrix $m$ on the letters of $X$ and finitely supported configurations $s, t$, the matrix element $\langle e_s, \iota_X(m) e_t\rangle$ in the standard basis of $\ell^2(F)$ is $m(s|_X, t|_X)$ if $s$ and $t$ agree at every site outside $X$, and $0$ otherwise.\par{\footnotesize\texttt{Sealed.inner\_localEmbed}}
 
-\paragraph{4.} For a finite set of sites $X$, the local embedding $\iota_X$ is injective and $\|\iota_X(m)\| = \|m\|$ for every matrix $m$ on the letters of $X$, the norm of $m$ being its operator norm on $\ell^2$.\\{\footnotesize\texttt{Sealed.localEmbed\_injective\_and\_norm}}
+\paragraph{4.} For a finite set of sites $X$, the local embedding $\iota_X$ is injective and $\|\iota_X(m)\| = \|m\|$ for every matrix $m$ on the letters of $X$, the norm of $m$ being its operator norm on $\ell^2$.\par{\footnotesize\texttt{Sealed.localEmbed\_injective\_and\_norm}}
 
-\paragraph{5.} Compatibility: for finite sets of sites $X \subseteq Y$ and a matrix $m$ on the letters of $X$, $\iota_Y(m \otimes 1) = \iota_X(m)$, where $(m \otimes 1)(\zeta, \zeta') = m(\zeta|_X, \zeta'|_X)$ if the letters $\zeta, \zeta'$ on $Y$ agree outside $X$, and $0$ otherwise.\\{\footnotesize\texttt{Sealed.localEmbed\_extend}}
+\paragraph{5.} Compatibility: for finite sets of sites $X \subseteq Y$ and a matrix $m$ on the letters of $X$, $\iota_Y(m \otimes 1) = \iota_X(m)$, where \[(m \otimes 1)(\zeta, \zeta') = m(\zeta|_X, \zeta'|_X)\] if the letters $\zeta, \zeta'$ on $Y$ agree outside $X$, and $0$ otherwise.\par{\footnotesize\texttt{Sealed.localEmbed\_extend}}
 
-\paragraph{6.} Local commutativity: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$.\\{\footnotesize\texttt{Sealed.commute\_localEmbed\_of\_disjoint}}
+\paragraph{6.} Local commutativity: for disjoint finite sets of sites $X$ and $Y$, $\iota_X(a)$ and $\iota_Y(b)$ commute for all matrices $a$ on the letters of $X$ and $b$ on the letters of $Y$.\par{\footnotesize\texttt{Sealed.commute\_localEmbed\_of\_disjoint}}
 
 \section*{The net of local algebras}
 Every set of sites $O$ has a $*$-subalgebra $\mathcal A(O)$ of the bounded operators on $H$, closed in norm (statement 7), and the quasi-local algebra is $\mathcal A_{ql} = \mathcal A(\Lambda)$.
 
-\paragraph{7.} For every set of sites $O$, the algebra $\mathcal A(O)$ is the norm closure, in the bounded operators on $H$, of the set of operators $\iota_X(m)$ with $X \subseteq O$ a finite set of sites and $m$ a matrix on the letters of $X$.\\{\footnotesize\texttt{Sealed.quasiLocalNet\_eq\_closure}}
+\paragraph{7.} For every set of sites $O$, the algebra $\mathcal A(O)$ is the norm closure, in the bounded operators on $H$, of the set of operators $\iota_X(m)$ with $X \subseteq O$ a finite set of sites and $m$ a matrix on the letters of $X$.\par{\footnotesize\texttt{Sealed.quasiLocalNet\_eq\_closure}}
 
-\paragraph{8.} The quasi-local algebra $\mathcal A_{ql}$ is the algebra $\mathcal A(\Lambda)$ of the set of all sites.\\{\footnotesize\texttt{Sealed.quasiLocalAlgebra\_def}}
+\paragraph{8.} The quasi-local algebra $\mathcal A_{ql}$ is the algebra $\mathcal A(\Lambda)$ of the set of all sites.\par{\footnotesize\texttt{Sealed.quasiLocalAlgebra\_def}}
 
-\paragraph{9.} Local commutativity: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$ commutes with every element of $\mathcal A(O_2)$.\\{\footnotesize\texttt{Sealed.commute\_of\_mem\_quasiLocalNet}}
+\paragraph{9.} Local commutativity: for disjoint sets of sites $O_1$ and $O_2$, every element of $\mathcal A(O_1)$ commutes with every element of $\mathcal A(O_2)$.\par{\footnotesize\texttt{Sealed.commute\_of\_mem\_quasiLocalNet}}
 
-\paragraph{10.} Isotony: for sets of sites $O_1 \subseteq O_2$, $\mathcal A(O_1) \subseteq \mathcal A(O_2)$.\\{\footnotesize\texttt{Sealed.quasiLocalNet\_mono}}
+\paragraph{10.} Isotony: for sets of sites $O_1 \subseteq O_2$, $\mathcal A(O_1) \subseteq \mathcal A(O_2)$.\par{\footnotesize\texttt{Sealed.quasiLocalNet\_mono}}
 
 \section*{Symmetries and the reference configuration}
-\paragraph{11.} Covariance: let a group $\Gamma$ act on the sites, with one finite alphabet $Q$ at every site and a reference configuration $s_0$ with $s_0(gu) = s_0(u)$. For each $g \in \Gamma$ there is a unitary $U$ on $H$ with $U \iota_X(m) U^* = \iota_{gX}(g_* m)$ for every finite set of sites $X$, where $gX = \{y : g^{-1} y \in X\}$ and $(g_* m)(\zeta, \zeta') = m(\zeta \circ g, \zeta' \circ g)$, and with $U \mathcal A(O) U^* = \mathcal A(gO)$ for every set of sites $O$. The unitary is asserted for each $g$ separately; the statement does not say that $g \mapsto U$ is a representation.\\{\footnotesize\texttt{Sealed.exists\_unitary\_covariance}}
+\paragraph{11.} Covariance: let a group $\Gamma$ act on the sites, with one finite alphabet $Q$ at every site and a reference configuration $s_0$ with $s_0(gu) = s_0(u)$. For each $g \in \Gamma$ there is a unitary $U$ on $H$ with $U \iota_X(m) U^* = \iota_{gX}(g_* m)$ for every finite set of sites $X$, where $gX = \{y : g^{-1} y \in X\}$ and \[(g_* m)(\zeta, \zeta') = m(\zeta \circ g, \zeta' \circ g),\] and with $U \mathcal A(O) U^* = \mathcal A(gO)$ for every set of sites $O$. The unitary is asserted for each $g$ separately; the statement does not say that $g \mapsto U$ is a representation.\par{\footnotesize\texttt{Sealed.exists\_unitary\_covariance}}
 
-\paragraph{12.} Independence of the reference configuration: for any two reference configurations $s_0$ and $s_0'$ (which may differ at infinitely many sites) there is a $*$-isomorphism $\varphi : \mathcal A_{ql} \to \mathcal A_{ql}'$ of the quasi-local algebras with $a \in \mathcal A(O) \iff \varphi(a) \in \mathcal A'(O)$ for every set of sites $O$ and every $a \in \mathcal A_{ql}$, and with $\varphi(\iota_X(m)) = \iota'_X(m)$ for every finite set of sites $X$ and matrix $m$ on its letters.\\{\footnotesize\texttt{Sealed.exists\_starAlgEquiv\_of\_ref}}
+\paragraph{12.} Independence of the reference configuration: for any two reference configurations $s_0$ and $s_0'$ (which may differ at infinitely many sites) there is a $*$-isomorphism $\varphi : \mathcal A_{ql} \to \mathcal A_{ql}'$ of the quasi-local algebras with $a \in \mathcal A(O) \iff \varphi(a) \in \mathcal A'(O)$ for every set of sites $O$ and every $a \in \mathcal A_{ql}$, and with $\varphi(\iota_X(m)) = \iota'_X(m)$ for every finite set of sites $X$ and matrix $m$ on its letters.\par{\footnotesize\texttt{Sealed.exists\_starAlgEquiv\_of\_ref}}
 
 \section*{The universal property}
-\paragraph{13.} Universal property: let $D$ be a C$^*$-algebra and $(\beta_X)$ a family, indexed by the finite sets of sites $X$, of unital $*$-homomorphisms from the matrices on the letters of $X$ to $D$, compatible in the sense $\beta_Y(m \otimes 1) = \beta_X(m)$ for $X \subseteq Y$ (with $m \otimes 1$ as in the compatibility of the local embeddings). Then there is exactly one unital $*$-homomorphism $\Phi : \mathcal A_{ql} \to D$ with $\Phi(\iota_X(m)) = \beta_X(m)$ for all $X$ and $m$.\\{\footnotesize\texttt{Sealed.exists\_unique\_lift}}
+\paragraph{13.} Universal property: let $D$ be a C$^*$-algebra and $(\beta_X)$ a family, indexed by the finite sets of sites $X$, of unital $*$-homomorphisms from the matrices on the letters of $X$ to $D$, compatible in the sense $\beta_Y(m \otimes 1) = \beta_X(m)$ for $X \subseteq Y$ (with $m \otimes 1$ as in the compatibility of the local embeddings). Then there is exactly one unital $*$-homomorphism $\Phi : \mathcal A_{ql} \to D$ with $\Phi(\iota_X(m)) = \beta_X(m)$ for all $X$ and $m$.\par{\footnotesize\texttt{Sealed.exists\_unique\_lift}}
 
-\paragraph{14.} Let $D$ be a C$^*$-algebra other than the zero algebra and $(\beta_X)$ a compatible family as in the universal property. Then the $*$-homomorphism $\Phi : \mathcal A_{ql} \to D$ with $\Phi(\iota_X(m)) = \beta_X(m)$ for all $X$ and $m$ is an isometry.\\{\footnotesize\texttt{Sealed.isometry\_lift}}
+\paragraph{14.} Let $D$ be a C$^*$-algebra other than the zero algebra and $(\beta_X)$ a compatible family as in the universal property. Then the $*$-homomorphism $\Phi : \mathcal A_{ql} \to D$ with $\Phi(\iota_X(m)) = \beta_X(m)$ for all $X$ and $m$ is an isometry.\par{\footnotesize\texttt{Sealed.isometry\_lift}}
 
 \section*{Finite volume}
-\paragraph{15.} If the set of sites $\Lambda$ is finite, the quasi-local algebra $\mathcal A_{ql}$ is the algebra of all bounded operators on $H$.\\{\footnotesize\texttt{Sealed.quasiLocalAlgebra\_eq\_top\_of\_finite}}
+\paragraph{15.} If the set of sites $\Lambda$ is finite, the quasi-local algebra $\mathcal A_{ql}$ is the algebra of all bounded operators on $H$.\par{\footnotesize\texttt{Sealed.quasiLocalAlgebra\_eq\_top\_of\_finite}}
 
-\paragraph{16.} For a finite set of sites $O$, the algebra $\mathcal A(O)$ is the range of the local embedding $\iota_O$.\\{\footnotesize\texttt{Sealed.quasiLocalNet\_eq\_range\_of\_finite}}
+\paragraph{16.} For a finite set of sites $O$, the algebra $\mathcal A(O)$ is the range of the local embedding $\iota_O$.\par{\footnotesize\texttt{Sealed.quasiLocalNet\_eq\_range\_of\_finite}}
 
 \section*{Examples}
 These examples show that the hypotheses of the main theorems can be met and that the objects are not degenerate.
 
-\paragraph{17.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the quasi-local algebra is not the zero algebra.\\{\footnotesize\texttt{Sealed.witness\_nontrivial\_quasiLocalAlgebra}}
+\paragraph{17.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the quasi-local algebra is not the zero algebra.\par{\footnotesize\texttt{Sealed.witness\_nontrivial\_quasiLocalAlgebra}}
 
-\paragraph{18.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the set of finitely supported configurations, which indexes the basis of $H$, is infinite.\\{\footnotesize\texttt{Sealed.witness\_infinite\_finConfig}}
+\paragraph{18.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the set of finitely supported configurations, which indexes the basis of $H$, is infinite.\par{\footnotesize\texttt{Sealed.witness\_infinite\_finConfig}}
 
-\paragraph{19.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the algebra $\mathcal A(\{0\})$ of the site $0$ contains an element that is not a multiple of the identity.\\{\footnotesize\texttt{Sealed.witness\_quasiLocalNet\_singleton\_not\_scalar}}
+\paragraph{19.} For the chain $\mathbb N$ with two letters per site and the reference configuration $0$, the algebra $\mathcal A(\{0\})$ of the site $0$ contains an element that is not a multiple of the identity.\par{\footnotesize\texttt{Sealed.witness\_quasiLocalNet\_singleton\_not\_scalar}}
 
-\paragraph{20.} For the chain $\mathbb Z$ with two letters per site and the reference configuration $0$, which is invariant under translations, there is a unitary $U$ on $H$ with $U \mathcal A(\{0\}) U^* = \mathcal A(\{1\})$.\\{\footnotesize\texttt{Sealed.witness\_translation\_covariant}}
+\paragraph{20.} For the chain $\mathbb Z$ with two letters per site and the reference configuration $0$, which is invariant under translations, there is a unitary $U$ on $H$ with $U \mathcal A(\{0\}) U^* = \mathcal A(\{1\})$.\par{\footnotesize\texttt{Sealed.witness\_translation\_covariant}}
 
-\paragraph{21.} For the chain $\mathbb N$ with two letters per site, the reference configurations $0$ and $1$ differ at infinitely many sites, and there is a $*$-isomorphism $\varphi$ of their quasi-local algebras with $a \in \mathcal A(O) \iff \varphi(a) \in \mathcal A'(O)$ for every set of sites $O$.\\{\footnotesize\texttt{Sealed.witness\_references\_differing\_everywhere}}
+\paragraph{21.} For the chain $\mathbb N$ with two letters per site, the reference configurations $0$ and $1$ differ at infinitely many sites, and there is a $*$-isomorphism $\varphi$ of their quasi-local algebras with $a \in \mathcal A(O) \iff \varphi(a) \in \mathcal A'(O)$ for every set of sites $O$.\par{\footnotesize\texttt{Sealed.witness\_references\_differing\_everywhere}}
 
 \vfill{\footnotesize SHA-256 of \texttt{verify/Challenge.lean}: \texttt{2866d29b91ce79ec230b3c61a2012f131b51ee0a8f19ccfec55d9d8fbc330908}}
 \end{document}

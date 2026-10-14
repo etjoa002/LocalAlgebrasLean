@@ -22,7 +22,13 @@ For a finite set of sites $`X`$, the local embedding $`\iota_X`$ is a unital $`*
 **4.** For a finite set of sites $`X`$, the local embedding $`\iota_X`$ is injective and $`\|\iota_X(m)\| = \|m\|`$ for every matrix $`m`$ on the letters of $`X`$, the norm of $`m`$ being its operator norm on $`\ell^2`$.  
 <sub>`Sealed.localEmbed_injective_and_norm`</sub>
 
-**5.** Compatibility: for finite sets of sites $`X \subseteq Y`$ and a matrix $`m`$ on the letters of $`X`$, $`\iota_Y(m \otimes 1) = \iota_X(m)`$, where $`(m \otimes 1)(\zeta, \zeta') = m(\zeta|_X, \zeta'|_X)`$ if the letters $`\zeta, \zeta'`$ on $`Y`$ agree outside $`X`$, and $`0`$ otherwise.  
+**5.** Compatibility: for finite sets of sites $`X \subseteq Y`$ and a matrix $`m`$ on the letters of $`X`$, $`\iota_Y(m \otimes 1) = \iota_X(m)`$, where 
+
+```math
+(m \otimes 1)(\zeta, \zeta') = m(\zeta|_X, \zeta'|_X)
+```
+
+if the letters $`\zeta, \zeta'`$ on $`Y`$ agree outside $`X`$, and $`0`$ otherwise.  
 <sub>`Sealed.localEmbed_extend`</sub>
 
 **6.** Local commutativity: for disjoint finite sets of sites $`X`$ and $`Y`$, $`\iota_X(a)`$ and $`\iota_Y(b)`$ commute for all matrices $`a`$ on the letters of $`X`$ and $`b`$ on the letters of $`Y`$.  
@@ -46,7 +52,13 @@ Every set of sites $`O`$ has a $`*`$-subalgebra $`\mathcal A(O)`$ of the bounded
 
 ## Symmetries and the reference configuration
 
-**11.** Covariance: let a group $`\Gamma`$ act on the sites, with one finite alphabet $`Q`$ at every site and a reference configuration $`s_0`$ with $`s_0(gu) = s_0(u)`$. For each $`g \in \Gamma`$ there is a unitary $`U`$ on $`H`$ with $`U \iota_X(m) U^* = \iota_{gX}(g_* m)`$ for every finite set of sites $`X`$, where $`gX = \{y : g^{-1} y \in X\}`$ and $`(g_* m)(\zeta, \zeta') = m(\zeta \circ g, \zeta' \circ g)`$, and with $`U \mathcal A(O) U^* = \mathcal A(gO)`$ for every set of sites $`O`$. The unitary is asserted for each $`g`$ separately; the statement does not say that $`g \mapsto U`$ is a representation.  
+**11.** Covariance: let a group $`\Gamma`$ act on the sites, with one finite alphabet $`Q`$ at every site and a reference configuration $`s_0`$ with $`s_0(gu) = s_0(u)`$. For each $`g \in \Gamma`$ there is a unitary $`U`$ on $`H`$ with $`U \iota_X(m) U^* = \iota_{gX}(g_* m)`$ for every finite set of sites $`X`$, where $`gX = \{y : g^{-1} y \in X\}`$ and 
+
+```math
+(g_* m)(\zeta, \zeta') = m(\zeta \circ g, \zeta' \circ g),
+```
+
+and with $`U \mathcal A(O) U^* = \mathcal A(gO)`$ for every set of sites $`O`$. The unitary is asserted for each $`g`$ separately; the statement does not say that $`g \mapsto U`$ is a representation.  
 <sub>`Sealed.exists_unitary_covariance`</sub>
 
 **12.** Independence of the reference configuration: for any two reference configurations $`s_0`$ and $`s_0'`$ (which may differ at infinitely many sites) there is a $`*`$-isomorphism $`\varphi : \mathcal A_{ql} \to \mathcal A_{ql}'`$ of the quasi-local algebras with $`a \in \mathcal A(O) \iff \varphi(a) \in \mathcal A'(O)`$ for every set of sites $`O`$ and every $`a \in \mathcal A_{ql}`$, and with $`\varphi(\iota_X(m)) = \iota'_X(m)`$ for every finite set of sites $`X`$ and matrix $`m`$ on its letters.  
