@@ -19,6 +19,7 @@ rev = "v4.35.0-rc3"
 [[lean_lib]]
 name = "LocalAlgebrasLean"
 
+# The sealed statements and their proofs (verify/); `lake comparator` reads both modules.
 [[lean_lib]]
 name = "Verify"
 srcDir = "verify"

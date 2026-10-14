@@ -2,6 +2,13 @@
   "challenge_module": "Challenge",
   "solution_module": "Solution",
   "theorem_names": [
+    "Sealed.region_index_iff",
+    "Sealed.net_iff",
+    "Sealed.net_properties_iff",
+    "Sealed.generated_net_properties",
+    "Sealed.qudit_net",
+    "Sealed.qudit_net_range_and_locality",
+    "Sealed.relabel_covariance",
     "Sealed.finConfig_def",
     "Sealed.configSpace_def",
     "Sealed.inner_localEmbed",
@@ -22,7 +29,9 @@
     "Sealed.witness_infinite_finConfig",
     "Sealed.witness_quasiLocalNet_singleton_not_scalar",
     "Sealed.witness_translation_covariant",
-    "Sealed.witness_references_differing_everywhere"
+    "Sealed.witness_references_differing_everywhere",
+    "Sealed.witness_generated_net_hypotheses",
+    "Sealed.witness_qudit_net_noncommutative"
   ],
   "definition_names": [],
   "permitted_axioms": [
