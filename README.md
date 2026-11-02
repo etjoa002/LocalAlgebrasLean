@@ -116,6 +116,11 @@ reference configurations that differ at infinitely many sites are inequivalent (
 Compositio Math. 6 (1939) 1–77); on the infinite lattice, the projection onto the reference state
 lies at distance `1/2` from the local algebra of every proper region.
 
+## Acknowledgement
+
+E.T. acknowledges support from the Alexander von Humboldt Foundation through the Humboldt Research
+Fellowship. This work has been supported by Klaus Tschira Foundation.
+
 ## Citation and licence
 
 Erickson Tjoa, *LocalAlgebrasLean: nets of local algebras and the quasi-local algebra in Lean*,
