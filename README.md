@@ -92,16 +92,28 @@ group actions; `Qudit/` the qudit net and the quasi-local algebra; `verify/` the
   - `Region.Basic` imports Mathlib only
 - `Net/`
   - `Net.Basic` imports `Region.Basic`
+  - `Net.Comap` imports `Net.Basic`, `Lattice.Basic`
   - `Net.Generated` imports `Net.Basic`
+  - `Net.HaagDuality` imports `Net.Comap`, `Net.Generated`
 - `Lattice/`
   - `Lattice.Basic` imports `Region.Basic`
+  - `Lattice.Block` imports `Lattice.Neighbourhood`
+  - `Lattice.Neighbourhood` imports `Lattice.Basic`
 - `Qudit/`
+  - `Qudit.Circuit` imports `Qudit.Ring`
   - `Qudit.Config` imports `Net.Basic`, `Lattice.Basic`
+  - `Qudit.Duality` imports `Qudit.Config`, `Net.HaagDuality`
+  - `Qudit.Placement` imports `Qudit.Region`, `Qudit.Relabel`, `Qudit.QuasiLocalCov`
+  - `Qudit.Presentation` imports `Qudit.Site`
   - `Qudit.QuasiLocal` imports `Qudit.Config`
   - `Qudit.QuasiLocalCov` imports `Qudit.QuasiLocalNet`
+  - `Qudit.QuasiLocalGenerators` imports `Qudit.Presentation`, `Qudit.Region`, `Qudit.QuasiLocalUniversal`
   - `Qudit.QuasiLocalNet` imports `Qudit.QuasiLocal`, `Net.Generated`, `Lattice.Basic`
   - `Qudit.QuasiLocalUniversal` imports `Qudit.QuasiLocalNet`
+  - `Qudit.Region` imports `Qudit.Duality`
   - `Qudit.Relabel` imports `Qudit.Config`
+  - `Qudit.Ring` imports `Qudit.Relabel`, `Qudit.Site`, `Net.Comap`
+  - `Qudit.Site` imports `Qudit.Duality`
 <!-- depgraph:end -->
 
 </details>

@@ -434,14 +434,8 @@ private theorem mapsTo_qlNet {f : quasiLocalAlgebra s₀ → quasiLocalAlgebra s
     rw [Set.mem_preimage, hb', h, SetLike.mem_coe, mem_qlNet]
     exact localEmbed_mem_quasiLocalNet s₀' hX m
   have hcl : a ∈ closure S := by
-    rw [closure_subtype]
-    have ha' : (a : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) ∈
-        closure (strictlyLocal s₀ O : Set (ConfigSpace s₀ →L[ℂ] ConfigSpace s₀)) := by
-      rw [← coe_quasiLocalNet]
-      exact ha
-    refine closure_mono (fun c hc => ?_) ha'
-    exact ⟨⟨c, strictlyLocal_le_quasiLocalNet s₀ Set.univ (strictlyLocal_mono s₀
-      (Set.subset_univ O) hc)⟩, hc, rfl⟩
+    rw [← coe_qlNet_eq_closure]
+    exact ha
   exact hC.closure_subset_iff.2 hS hcl
 
 /-- Star isomorphisms of C*-algebras are continuous, being contractive. -/

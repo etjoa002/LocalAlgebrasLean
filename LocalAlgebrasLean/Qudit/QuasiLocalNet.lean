@@ -35,8 +35,8 @@ net is generating in the bounded operators.
 * `mem_strictlyLocal_iff_finite`, `mem_strictlyLocal_iff_finset`: the finite regions given by
   `X.Finite` or by `Finset Λ`.
 * `quasiLocalNet_eq_closure`, `quasiLocalNet_isLocallyCommutative`.
-* `map_qlNet`, `qlNet_isGenerating`, `qlNet_isLocallyCommutative`, `dense_strictlyLocal`,
-  `dense_iUnion_qlNet_finite`: the net in the quasi-local algebra.
+* `map_qlNet`, `qlNet_isGenerating`, `qlNet_isLocallyCommutative`, `coe_qlNet_eq_closure`,
+  `dense_strictlyLocal`, `dense_iUnion_qlNet_finite`: the net in the quasi-local algebra.
 * `localEmbed_surjective`, `quasiLocalNet_isGenerating_of_finite_nontrivial`: finitely many sites
   with two or more letters.
 * `quasiLocalNet_finite`, `map_localAlgebra_localEmbed`, `quasiLocalAlgebra_eq_top_of_finite`,
@@ -231,6 +231,23 @@ theorem qlNet_isGenerating : (qlNet s₀).IsGenerating := by
 /-- The restricted net is locally commutative for the regions of the sites. -/
 theorem qlNet_isLocallyCommutative : (qlNet s₀).IsLocallyCommutative (subsetIndex Λ) :=
   fun _ _ hO a ha b hb => Subtype.ext (quasiLocalNet_isLocallyCommutative s₀ hO a ha b hb)
+
+/-- U4.3, Lemma 4(a) (closure): read in the quasi-local algebra, the algebra of a region `O` is the
+closure of its strictly local part. The closure in the bounded operators is `coe_quasiLocalNet`;
+the strictly local operators lie in the closed subalgebra `A(Λ)`, so the closure may be taken
+there. -/
+theorem coe_qlNet_eq_closure (O : Set Λ) :
+    (qlNet s₀ O : Set (quasiLocalAlgebra s₀)) =
+      closure {a : quasiLocalAlgebra s₀ |
+        (a : ConfigSpace s₀ →L[ℂ] ConfigSpace s₀) ∈ strictlyLocal s₀ O} := by
+  ext a
+  rw [closure_subtype, SetLike.mem_coe, mem_qlNet, ← SetLike.mem_coe, coe_quasiLocalNet]
+  refine ⟨fun ha => closure_mono (fun c hc => ?_) ha,
+    fun ha => closure_minimal ?_ isClosed_closure ha⟩
+  · exact ⟨⟨c, strictlyLocal_le_quasiLocalNet s₀ Set.univ (strictlyLocal_mono s₀
+      (Set.subset_univ O) hc)⟩, hc, rfl⟩
+  · rintro _ ⟨c, hc, rfl⟩
+    exact subset_closure hc
 
 /-- The strictly local operators are dense in the quasi-local algebra. -/
 theorem dense_strictlyLocal :

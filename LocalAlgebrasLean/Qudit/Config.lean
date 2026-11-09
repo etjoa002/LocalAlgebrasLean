@@ -32,6 +32,9 @@ are arbitrary subsets.
 
 * `LocalAlgebrasLean.Qudit.sum_glue`, `localAlgebra_mono`, `embed_mem`, `mem_localAlgebra_iff`,
   `localAlgebra_univ`, `quditNet_isLocallyCommutative`.
+* The embedding is linear, multiplicative and unital: `embed_zero`, `embed_add`, `embed_smul`,
+  `embed_sum`, `embed_mul`, `embed_one`.
+* `eq_smul_one_of_mem_quditNet_empty`: the algebra of the empty region is `ℂ 1`.
 -/
 
 noncomputable section
@@ -333,6 +336,72 @@ theorem isLocal_iff_exists_embed [∀ u, Nonempty (σ u)] {X : Set Λ} {M : Qudi
   · rintro ⟨m, rfl⟩
     exact isLocal_embed X m
 
+section Embed
+
+variable [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)]
+
+omit [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] in
+/-- The embedding of the zero matrix is zero. -/
+theorem embed_zero (X : Set Λ) : embed X (0 : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) = 0 := by
+  ext s s'
+  simp [embed_apply]
+
+omit [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] in
+/-- The embedding is additive. -/
+theorem embed_add (X : Set Λ) (m n : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
+    embed X (m + n) = embed X m + embed X n := by
+  ext s s'
+  simp only [embed_apply, Matrix.add_apply]
+  split_ifs <;> simp
+
+omit [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] in
+/-- The embedding is homogeneous. -/
+theorem embed_smul (X : Set Λ) (c : ℂ) (m : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
+    embed X (c • m) = c • embed X m := by
+  ext s s'
+  simp only [embed_apply, Matrix.smul_apply]
+  split_ifs <;> simp
+
+omit [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)] in
+/-- The embedding commutes with finite sums. -/
+theorem embed_sum (X : Set Λ) {ι : Type*} (s : Finset ι)
+    (f : ι → Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
+    embed X (∑ i ∈ s, f i) = ∑ i ∈ s, embed X (f i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [embed_zero]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, embed_add, ih]
+
+omit [∀ u, DecidableEq (σ u)] in
+/-- The embedding is multiplicative. -/
+theorem embed_mul (X : Set Λ) [Fintype X] (m n : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) :
+    embed X (m * n) = embed X m * embed X n := by
+  ext s s'
+  rw [Matrix.mul_apply, sum_glue X s _ fun u hu => by
+    have : ¬ AgreesOff X s u := fun h => hu h.symm
+    simp [embed_apply, this]]
+  have h1 : ∀ ξ, AgreesOff X s (glue X ξ s) := fun ξ => (glue_agreesOff X ξ s).symm
+  have h2 : ∀ ξ, AgreesOff X (glue X ξ s) s' ↔ AgreesOff X s s' := fun ξ =>
+    ⟨fun h => (h1 ξ).trans h, fun h => (glue_agreesOff X ξ s).trans h⟩
+  by_cases h : AgreesOff X s s'
+  · simp only [embed_apply, h, h1, h2, restrict_glue, Matrix.mul_apply, ite_true]
+    convert rfl
+  · simp [embed_apply, h, h1, h2]
+
+omit [DecidableEq Λ] [∀ u, Fintype (σ u)] in
+/-- The embedding is unital. -/
+theorem embed_one (X : Set Λ) [Fintype X] :
+    embed X (1 : Matrix ((x : X) → σ x) ((x : X) → σ x) ℂ) = 1 := by
+  ext s s'
+  rw [embed_apply, Matrix.one_apply, Matrix.one_apply]
+  by_cases h : AgreesOff X s s'
+  · rw [ite_eq_left h]
+    exact if_congr (eq_iff_restrict_eq h).symm rfl rfl
+  · have : s ≠ s' := fun e => h (e ▸ agreesOff_refl X s)
+    rw [ite_eq_right h, ite_eq_right this]
+
+end Embed
+
 section Net
 
 variable [Fintype Λ] [DecidableEq Λ] [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ u)]
@@ -388,6 +457,22 @@ def quditNet (σ : Λ → Type*) [∀ u, Fintype (σ u)] [∀ u, DecidableEq (σ
   isClosed := localAlgebra_isClosed
 
 theorem quditNet_apply (X : Set Λ) : quditNet σ X = localAlgebra X := rfl
+
+/-- The algebra of the empty region consists of the multiples of the identity: a matrix `M` local
+to `∅` is `M t t • 1`, for any configuration `t`. -/
+theorem eq_smul_one_of_mem_quditNet_empty {M : QuditAlgebra σ} (hM : M ∈ quditNet σ ∅)
+    (t : Config σ) : M = M t t • (1 : QuditAlgebra σ) := by
+  classical
+  have hM' : IsLocal ∅ M := mem_localAlgebra.mp hM
+  ext s s'
+  rw [Matrix.smul_apply, Matrix.one_apply]
+  by_cases h : s = s'
+  · subst h
+    rw [ite_eq_left rfl, smul_eq_mul, mul_one]
+    exact hM'.2 s s t t (agreesOff_refl _ _) (agreesOff_refl _ _) (funext fun x => x.2.elim)
+      (funext fun x => x.2.elim)
+  · rw [ite_eq_right h, smul_zero]
+    exact hM'.1 s s' fun hag => h (funext fun u => hag u (Set.notMem_empty u))
 
 /-- The qudit net is locally commutative for the region index of the sites: local algebras of
 disjoint regions commute. -/
